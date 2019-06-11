@@ -44,16 +44,16 @@
 
 [Source](https://crypto.stackexchange.com/questions/5646/what-are-the-differences-between-a-digital-signature-a-mac-and-a-hash/5647#5647)
 
-- Integrity: 接收方能否确认信息未被修改?
+- 完整性 (Integrity): 接收方能否确认信息未被修改?
 
-- Authentication: 接收方能否确认信息来自发送方?
+- 可认证性 (Authentication): 接收方能否确认信息来自发送方?
 
-- Non-repudiation: 如果接收方把信息转交给第三方,第三方能否确认信息源自发送方?
+- 不可否认性 (Non-repudiation): 如果接收方把信息转交给第三方,第三方能否确认信息源自发送方?
 
-| Security Goal           | Hash |    MAC    |  Digital Signiture   |
-|-------------------------|------|-----------|----------------------|
-| Integrity               |  Yes |    Yes    |   Yes                |
-| Authentication          |  No  |    Yes    |   Yes                |
-| Non-repudiation         |  No  |    No     |   Yes                |
-|-------------------------|------|-----------|----------------------|
-| Kind of keys            | none | symmetric | asymmetric           |
+| 安全性能           | 加密用散列 |    MAC    |  数字签名             |
+|-------------------|-----------|-----------|----------------------|
+| 完整性             |  Yes      |    Yes    |   Yes                |
+| 可认证性           |  No       |    Yes    |   Yes                |
+| 不可否认性         |  No       |    No     |   Yes                |
+|-------------------|-----------|-----------|----------------------|
+| 密钥类型           | 无        | 对称       | 非对称                |
