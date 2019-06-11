@@ -4,17 +4,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Description
- * - 完整性
- * - 可认证性
- * - 不可否认性
+ * @Description:
  * @author: lingy
- * @Date: 2019-06-10 15:53:25
+ * @Date: 2019-06-11 14:40:17
  * @param: null
  * @return:
  */
-@RestController
-@RequestMapping("ajax/mac")
-public class MessageAuthenticationCodeAjaxController {
 
+@RequestMapping("ajax/digital-signature")
+@RestController
+public class DigitalSignatureAjaxController {
 }

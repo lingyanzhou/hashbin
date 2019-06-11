@@ -26,12 +26,12 @@ import java.util.Arrays;
  */
 @RestController
 @RequestMapping("ajax/bloomfilter")
-public class BloomFilterAjaxController {
+public class BloomFilterDemoAjaxController {
     private static int insertions = 1024*1024;
     private BloomFilter<String> filterHighFpp = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), insertions, 0.5);
     private BloomFilter<String> filterLowFpp = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), insertions, 0.01);
     private char[] zeros = new char[1024];
-    public BloomFilterAjaxController() {
+    public BloomFilterDemoAjaxController() {
         Arrays.fill(zeros, '0');
         StringBuilder sb = new StringBuilder(1040);
         sb.append(zeros);

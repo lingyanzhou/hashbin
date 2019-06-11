@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("ajax/consistenthash")
-public class ConsistentHashAjaxController {
+public class ConsistentHashDemoAjaxController {
     @PostMapping("/bucket/{buckets}")
     public Integer getBucket(@RequestBody byte[] data, @PathVariable Integer buckets) {
         return Hashing.consistentHash(Hashing.md5().hashBytes(data), buckets);

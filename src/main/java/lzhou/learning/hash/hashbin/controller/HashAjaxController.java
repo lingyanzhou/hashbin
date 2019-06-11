@@ -17,11 +17,6 @@ import java.nio.ByteBuffer;
  * [Hash直译](http://image.baidu.com/search/index?tn=baiduimage&ps=1&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=beef+hash)
  * - 定义
  *   把任意长度内容映射为定长的散列值的函数
- * - 应用
- *   - 分桶 (Hash Table)
- *   - 消息摘要 (Message Digest)
- *   - 完整性校验和(Checksum)
- *   - 数字签名 (Digital Signature)
  * - 性质
  *   - 一般性质
  *     - 变长输入
@@ -32,7 +27,11 @@ import java.nio.ByteBuffer;
  *     - 单向性(抗原相性)
  *     - 抗碰撞性(抗第二原相性)
  *     - 强伪随机性(敏感性, 均衡性, 非线性性)
- * - 散列算法结构
+ * - 功能
+ *   - 分桶 (Hash Table)
+ *   - 消息摘要 (Message Digest)
+ *   - 完整性 (Integrity)
+ * - 算法结构
  *   - 初始化状态向量, 把消息分块后, 级联非线性方程, 根据最终的状态向量输出
  *   - [Link](https://blog.csdn.net/wwchao2012/article/details/80316862)
  * - 代表算法
