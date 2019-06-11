@@ -39,9 +39,15 @@ import java.util.Map;
  *     - 服务器计算HMAC(key, challenge), 验证用户身份
  *   - JWT (JSON Web Token)
  *     - 在前后端分离的网页或Restful API中, 取代Session.
- *     - 格式: header.playload.signature, 各部分以base64编码后, 以'.'分隔
- *     - signature支持以HMAC"签名"
- *
+ *     - 格式: header.playload.signature, 各部分以base64Url编码后, 以'.'分隔, signature支持以HMAC"签名"
+ *     - 好处
+ *       - 支持跨域
+ *       - 服务层无状态
+ *       - 可自定义载荷
+ *     - JWT 问题
+ *       - 有效期问题(用户登出, JWT任然有效)
+ *       - 默认不加密
+ *       - 盗用
  * @author: lingy
  * @Date: 2019-06-10 15:53:25
  * @param: null
