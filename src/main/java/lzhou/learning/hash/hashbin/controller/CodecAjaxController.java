@@ -21,20 +21,20 @@ import java.util.function.Function;
  *   - Base32
  *   - Base64
  * - Base16 / Hex 编码
- *   - 以每4比特为刻度编码, 2^4 == 16
- *   - 码表: "0123456789ABCDEF" (不区分大小写)
+ *   - 以每4比特为刻度编码, 16 == 2^4, 即每1字节编码为2字节
+ *   - 码表: "0123456789ABCDEF", 不区分大小写
  *   - 编码效率: 编码后为源文件大小的2倍
  * - Base32 编码
- *   - 以每5比特为刻度编码, 2^5 == 32
- *   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+ *   - 以每5比特为刻度编码, 32 == 2^5, 即每5字节编码为8字节
+ *   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
  *   - 编码效率: 编码后为源文件大小的8/5
  * - Base64 编码
- *  - 以每6比特为刻度编码, 2^6 == 64
- *  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+ *  - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
+ *  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
  *  - 编码效率: 编码后为源文件大小的4/3
  * - Base64Url 编码
  *   - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
- *   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+ *   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
  * @author: lingy
  * @Date: 2019-06-10 09:44:06
  * @param: null
@@ -54,13 +54,13 @@ public class CodecAjaxController {
      * @return: org.springframework.http.ResponseEntity<org.springframework.core.io.Resource>
      */
     @PostMapping(value={"toBase16", "toHex"}, consumes= MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> toBase16(@RequestBody byte[] data) throws IOException {
-        return encode(data, (x)-> BaseEncoding.base16().encode(x));
+    public String toBase16(@RequestBody byte[] data) throws IOException {
+        return BaseEncoding.base16().encode(data);
     }
 
     @PostMapping(value={"fromBase16", "fromHex"}, consumes= MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Resource> fromBase16(@RequestBody String data) throws IOException {
-        return decode(data, (x)-> BaseEncoding.base16().decode(x));
+        return toResponse(BaseEncoding.base16().decode(data));
     }
     /**
      * @Description: Base32 编码
@@ -73,13 +73,13 @@ public class CodecAjaxController {
      * @return: org.springframework.http.ResponseEntity<org.springframework.core.io.Resource>
      */
     @PostMapping(value="toBase32", consumes= MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> toBase32(@RequestBody byte[] data) throws IOException {
-        return encode(data, (x)-> BaseEncoding.base32().encode(x));
+    public String toBase32(@RequestBody byte[] data) throws IOException {
+        return BaseEncoding.base32().encode(data);
     }
 
     @PostMapping(value="fromBase32", consumes= MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Resource> fromBase32(@RequestBody String data) throws IOException {
-        return decode(data, (x)-> BaseEncoding.base32().decode(x));
+        return toResponse(BaseEncoding.base32().decode(data));
     }
     /**
      * @Description: Base64 编码
@@ -92,13 +92,13 @@ public class CodecAjaxController {
      * @return: org.springframework.http.ResponseEntity<org.springframework.core.io.Resource>
      */
     @PostMapping(value="toBase64", consumes= MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> toBase64(@RequestBody byte[] data) throws IOException {
-        return encode(data, (x)-> BaseEncoding.base64().encode(x));
+    public String toBase64(@RequestBody byte[] data) throws IOException {
+        return BaseEncoding.base64().encode(data);
     }
 
     @PostMapping(value="fromBase64", consumes= MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Resource> fromBase64(@RequestBody String data) throws IOException {
-        return decode(data, (x)-> BaseEncoding.base64().decode(x));
+        return toResponse(BaseEncoding.base64().decode(data));
     }
     /**
      * @Description: Base64Url 编码
@@ -110,12 +110,12 @@ public class CodecAjaxController {
      * @return: org.springframework.http.ResponseEntity<org.springframework.core.io.Resource>
      */
     @PostMapping(value="toBase64Url", consumes= MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<Resource> toBase64Url(@RequestBody byte[] data) throws IOException {
-        return encode(data, (x)-> BaseEncoding.base64Url().encode(x));
+    public String toBase64Url(@RequestBody byte[] data) throws IOException {
+        return BaseEncoding.base64Url().encode(data);
     }
     @PostMapping(value="fromBase64Url", consumes= MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Resource> fromBase64Url(@RequestBody String data) throws IOException {
-        return decode(data, (x)-> BaseEncoding.base64Url().decode(x));
+        return toResponse(BaseEncoding.base64Url().decode(data));
     }
 
     @PostMapping(value="convert", consumes= MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -153,21 +153,11 @@ public class CodecAjaxController {
                 .body(resource);
     }
 
-    private static ResponseEntity<Resource> encode(byte[] data, Function<byte[], String> encodeFunc) throws IOException {
-        String encoded = encodeFunc.apply(data);
-        ByteArrayResource resource = new ByteArrayResource(encoded.getBytes());
-        return ResponseEntity.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .contentLength(resource.contentLength())
-                .body(resource);
-    }
-
-    private static ResponseEntity<Resource> decode(String data, Function<String, byte[]> decodeFunc) throws IOException {
-        byte[] decoded = decodeFunc.apply(data);
-        ByteArrayResource resource = new ByteArrayResource(decoded);
+    private static ResponseEntity<Resource> toResponse(byte[] data) throws IOException {
+        ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .contentLength(resource.contentLength())
+                .header("Content-Disposition", "attachment;filename=decoded.bin")
                 .body(resource);
     }
 }
