@@ -784,6 +784,8 @@
   
   - SHA1withRSA
   
+  - RSA2 / SHA256withRSA [RSA和RSA2签名算法区别 ](https://docs.open.alipay.com/291/106115)
+  
   - 椭圆曲线数字签名算法（ECDSA）
 
 - 散列, HMAC与数字签名的对比
