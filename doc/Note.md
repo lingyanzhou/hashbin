@@ -87,16 +87,34 @@
 - 高级应用简介
   - 工作量证明 (Proof-of-Work)
     - ![Proof of Work](img/proof_of_work.jpg)
-    - 常用于区块链
-    - 计算H(message, counter), 直到散列值达到一定要求
+    - 比特币区块链通过竞争记账方式解决去中心化的账本一致性问题
+    - 通过工作量证明算法使得区块链历史数据实际上不可更改
+    - 工作量证明方程: 满足难度目标(前置零的个数)的散列值`H(message, nounce)`
+    - [区块链共识技术一:pow共识机制](https://www.jianshu.com/p/1026fb3c566f)
   - 布伦过滤器 (Bloom Filter)
+  
+    ![布伦过滤器](img/bloomfilter.jpg)
+    
     - 常用于大数据集合, 数据库
     - 计算一个元素的k个散列值, 查看BitSet里这k个位的值, 如果BitSet包含这k个值, 元素可能在集合中, 否则元素一定不在集合中
     - 牺牲正确性, 以获得常数的时间和空间复杂度
+    - [布隆过滤器 -- 空间效率很高的数据结构](https://segmentfault.com/a/1190000002729689)
   - 一致性哈希 (Consistent Hashing)
+    
+    ![Consistent Hash](img/consistent_hash1.png)
+    ![Consistent Hash New Node](img/consistent_hash2.png)
     - 常用于分布式缓存, 规避缓存雪崩
-    - 利用哈希环, 保证原有的请求可以被映射到原有的或者新的服务器中去, 而不会被映射到原来的其它服务器上去
+    - 利用哈希环, 保证内容可以被映射到原来的或者新的节点中去, 而不会被映射到原有的其它节点上去
+    - 一致性哈希要求键值和节点ID处于同一值域(哈希环), 而不用取模操作. 内容将被存储到具有与其键值最接近的ID的节点上
     - [深入浅出一致性Hash原理](https://www.jianshu.com/p/e968c081f563)
+  - 散列链一次性口令
+    - 散列链是一种由单个密钥或密码生成多个一次性密钥或密码的一种方法. 例如`h^4(x) = h(h(h(h(x))))`
+    - 作为一种在非安全环境中的密码保护方案
+      - 服务器储存用户提供的口令`h^1000(password)`
+      - 验证时, 用户提供`h^999(password)`, 服务器验证`h(h^999(password))`
+      - 如果验证成功, 服务器更新口令为`h^999(password)`
+    - [哈希链](https://baike.baidu.com/item/%E5%93%88%E5%B8%8C%E9%93%BE/10230309)
+    
 - 常见攻击
   - 暴力破解
     - 对抗: 强制信息的长度, 加盐(salt)
@@ -216,7 +234,10 @@
   - 加密和解密都使用同一个密钥的加密方法
  
 - 密钥分发
-  - 通过非对称加密算法
+
+  ![对称加密密钥分发](img/sym-encry.png)
+  
+  - 例如: 通过非对称加密算法
 - 密钥管理
   - n^2个密钥以确定n个个体点对点加密
   
@@ -236,8 +257,6 @@
   - [Week9 - part 2 - Symmetric Key Encryption.pdf](https://www.ics.uci.edu/~stasio/ics8-w12/Week9%20-%20part%202%20-%20Symmetric%20Key%20Encryption.pdf)
 
 - 代表算法
-  - RC4
-  
   - DES (Data Encryption Standard)
     - 块长度: 64 位
     - 密钥长度: 56位有效密钥 + 8位奇偶校验码 = 64位
@@ -293,9 +312,73 @@
           4. addRoundKey
           与循环密钥XOR 
     - [Lecture 46: Advanced Encryption Standard](https://www.cs.utexas.edu/~byoung/cs361/lecture46.pdf)
+  - RC4
+  - Blowfish
+ 
+- 分组密码的加密模式 (Encryption Mode)
+
+  - ECB (Electronic Code Book)
   
-- 加密模式 ()
-  - 
+  ![ECB_enc](img/ECB_enc.png)
+  
+  ![ECB_decr](img/ECB_decr.png)
+  
+  ![ECB Disctionary attack](img/ECB_example.png)
+  
+  - 优点
+    - 并行计算
+  - 缺点
+    - 确定性 (Deterministic)
+    - 易受字典攻击 (Dictionary Attack)
+  
+  - CBC (Cipher Block Chaining)
+  
+  ![CBC_enc](img/CBC_enc.png)
+  
+  ![CBC_decr](img/CBC_decr.png)
+  
+  - 优点
+    - 伪随机性
+  - 缺点
+    - 错误传播广
+    - 串行计算
+  
+  - OFB (Output Feedback)
+  
+  ![OFB_enc](img/OFB_enc.png)
+  
+  ![OFB_decr](img/OFB_decr.png)
+  
+  - 优点
+    - 伪随机性
+    - 错误隔离
+  - 缺点
+    - 串行计算
+  
+  - CFB (Cipher Feedback)
+  
+  ![CFB_enc](img/CFB_enc.png)
+  
+  ![CFB_decr](img/CFB_decr.png)
+  
+  - 优点
+    - 伪随机性
+  - 缺点
+    - 错误影响临近块
+    - 串行计算
+  
+  - CTR (Counter)
+  
+  ![CTR_enc](img/CTR_enc.png)
+  
+  ![CTR_decr](img/CTR_decr.png)
+  
+  - 优点
+    - 伪随机性
+    - 随机访问
+    - 预计算
+    - 并行计算
+    - 错误隔离
   
 ## 非对等 / 公钥加密 (Asymmetric / Public Key Encryption)
 
@@ -305,6 +388,9 @@
   
 - 常见问题
   - 密钥分发
+    
+    ![非对等加密密钥分发](img/asym-encry.png)
+   
     - 通过CA分发公钥
   - 密钥管理
     - n对密钥以确定n个个体点对点加密
@@ -321,16 +407,15 @@
   - 可认证性 (Authenticity)
   - 不可否认性  (Non-repudiation)
 
-- 问题
-  - 使用非对称加密文件本身效率低
-  - 解决办法：对文件的散列值签名
+- 消息摘要与数字签名
+  - 使用非对称加密原始文件效率低
+  - 解决办法：对文件的消息摘要签名
+  - 例如: Md5withRSA 先计算MD5消息摘要, 再用RSA对消息摘要签名
   
 - 常用算法
   - Md5withRSA
   - SHA1withRSA
-  - 
-
-
+  - 椭圆曲线数字签名算法（ECDSA）
 
 ## 散列, HMAC与数字签名的对比
 

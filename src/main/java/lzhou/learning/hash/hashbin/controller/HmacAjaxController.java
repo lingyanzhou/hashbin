@@ -2,19 +2,14 @@ package lzhou.learning.hash.hashbin.controller;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
-import io.jsonwebtoken.CompressionCodecs;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.crypto.KeyGenerator;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.crypto.spec.DESKeySpec;
+import java.security.*;
 
 /**
  * @Description HMAC (Keyed-Hashing for Message Authentication Code)
@@ -56,25 +51,27 @@ import java.util.Map;
 @RestController
 @RequestMapping("ajax/hmac")
 public class HmacAjaxController {
-    Key key = null;
+    @Value("${hmac.key}")
+    private String keyStr;
 
-    public HmacAjaxController() throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-        keyGen.init(SecureRandom.getInstance("SHA1PRNG"));
-        key = keyGen.generateKey();
-    }
+    byte[] keyBytes = null;
 
     @PostMapping("hmac-md5")
     public String hmacMd5(@RequestBody byte[] data) throws NoSuchAlgorithmException {
         return BaseEncoding.base16().encode(
-                Hashing.hmacMd5(key).hashBytes(data).asBytes()
+                Hashing.hmacMd5(keyBytes).hashBytes(data).asBytes()
         );
     }
 
     @PostMapping("hmac-sha256")
     public String hmacSha256(@RequestBody byte[] data) throws NoSuchAlgorithmException {
         return BaseEncoding.base16().encode(
-                Hashing.hmacSha256(key).hashBytes(data).asBytes()
+                Hashing.hmacSha256(keyBytes).hashBytes(data).asBytes()
         );
+    }
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        keyBytes = new DESKeySpec(keyStr.getBytes()).getKey();
     }
 }

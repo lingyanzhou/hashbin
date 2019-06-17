@@ -27,7 +27,7 @@ import java.util.Arrays;
 @RestController
 @RequestMapping("ajax/bloomfilter")
 public class BloomFilterDemoAjaxController {
-    private static int insertions = 1024*1024;
+    private static int insertions = 1024*512;
     private BloomFilter<String> filterHighFpp = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), insertions, 0.5);
     private BloomFilter<String> filterLowFpp = BloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), insertions, 0.01);
     private char[] zeros = new char[1024];
