@@ -13,25 +13,45 @@
 ## 编码
 
 - 目的
+
   - 方便二进制数据在文本协议里传输 (例如MIME, URL)
+
 - 常用编码
+
   - Base16 / Hex
+
   - Base32
+
   - Base64
+
 - Base16 / Hex 编码
+
   - 以每4比特为刻度编码, 16 == 2^4, 即每1字节编码为2字节
+
   - 码表: "0123456789ABCDEF", 不区分大小写
+
   - 编码效率: 编码后为源文件大小的2倍
+
 - Base32 编码
+
   - 以每5比特为刻度编码, 32 == 2^5, 即每5字节编码为8字节
+
   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
+
   - 编码效率: 编码后为源文件大小的8/5
+
 - Base64 编码
+
   - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
+
   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
+
   - 编码效率: 编码后为源文件大小的4/3
+
 - Base64Url 编码
+  
   - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
+  
   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
      
 ## 散列算法
@@ -39,214 +59,381 @@
 ![Hash(Food)](img/beefhash.jpg)
 
 - 定义
+
   - 把任意长度内容映射为定长的散列值的函数
+  
 - 性质
+ 
   - 一般性质
+    
     - 变长输入
+    
     - 定长输出
+    
     - 伪随机性(置乱性, 均衡性)
+    
     - 快速性
+  
   - 加密用散列函数性质
+  
     - 单向性(抗原相性)
+   
     - 抗碰撞性(抗第二原相性)
+   
     - 强伪随机性(敏感性, 均衡性, 非线性性)
+    
 - 目的
+  
   - 分桶 (Hash Table)
+  
   - 消息摘要 (Message Digest)
+  
   - 完整性 (Integrity)
+  
 - 算法结构
+  
   - 初始化状态向量, 把消息分组后, 级联非线性方程, 根据最终的状态向量输出
+  
   - [常见的Hash算法(General Purpose Hash Function Algorithms)](https://blog.csdn.net/wwchao2012/article/details/80316862)
+
 - 代表算法
+  
   - (CRC-m 循环冗余校验码)
   
   ![crc32](img/crc32.jpg)
   
     - 原始帧与预先确定的除数(m+1位)进行模2除法运算，余数(m位)作为CRC校验码
+   
     - 多用于底层通信的校验
+   
     - 随机性差
+   
     - [通信原理中CRC校验原理与过程](https://baijiahao.baidu.com/s?id=1608965002019598869&wfr=spider&for=pc)
   - SDBM
+   
     - 通用散列算法, 分桶性能好
+    
     - hash(i) = hash(i - 1)65599 + str[i]
+    
     - [哈希(Hash)算法 DJB/ELF/PJW/SDBM/FNV1(a)](https://blog.csdn.net/wwchao2012/article/details/80329766)
+  
   - BKDR
+    
     - 通用散列算法, 可通过改变seed生成一组散列函数
+    
     - [BKDRhash ](https://www.cnblogs.com/ldy-miss/p/6099454.html)
+  
   - MD5 (Message Digest 5)
   
     ![MD5](img/MD5.png)
   
     - 四个状态变量, 四个非线性操作函数, 对每块(512位)进行64步计算
+    
     - 摘要长度: 128位
+    
     - 王小云于2004年破解
+    
     - [信息摘要算法之一：MD5算法解析及实现 ](https://www.cnblogs.com/foxclever/p/7668369.html)
+  
   - SHA1 (Secure Hash Algorithm 1)
   
     ![SHA1](img/sha1.png)
     
     - 五个状态变量, 四个非线性操作函数, 对每块(512位)进行80步计算
+    
     - 摘要长度: 160位散列值
+    
     - 王小云于2005年破解
+    
     - [信息摘要算法之二：SHA1算法分析及实现](https://www.cnblogs.com/foxclever/p/8282366.html)
   - SHA256
+   
     - 八个状态变量, 六个非线性操作函数, 对每块(512位)进行64步计算
+    
     - 摘要长度: 256位散列值
+    
     - [比特币算法——SHA256算法介绍](https://blog.csdn.net/wowotuo/article/details/78907380)
 
 - 高级应用简介
 
   - 工作量证明 (Proof-of-Work)
+    
     - ![Proof of Work](img/proof_of_work.jpg)
+    
     - 比特币区块链通过竞争记账方式解决去中心化的账本一致性问题
+    
     - 通过工作量证明算法使得区块链历史数据实际上不可更改
+    
     - 工作量证明方程: 满足难度目标(前置零的个数)的散列值`H(message, nounce)`
+    
     - [区块链共识技术一:pow共识机制](https://www.jianshu.com/p/1026fb3c566f)
+  
   - 布伦过滤器 (Bloom Filter)
   
     ![布伦过滤器](img/bloomfilter.jpg)
     
     - 常用于大数据集合, 数据库
+    
     - 计算一个元素的k个散列值, 查看BitSet里这k个位的值, 如果BitSet包含这k个值, 元素可能在集合中, 否则元素一定不在集合中
+    
     - 牺牲正确性, 以获得常数的时间和空间复杂度
+    
     - [布隆过滤器 -- 空间效率很高的数据结构](https://segmentfault.com/a/1190000002729689)
+  
   - 一致性哈希 (Consistent Hashing)
     
     ![Consistent Hash](img/consistent_hash1.png)
+    
     ![Consistent Hash New Node](img/consistent_hash2.png)
+    
     - 常用于分布式缓存, 规避缓存雪崩
+    
     - 利用哈希环, 保证内容可以被映射到原来的或者新的节点中去, 而不会被映射到原有的其它节点上去
+    
     - 一致性哈希要求键值和节点ID处于同一值域(哈希环), 而不用取模操作. 内容将被存储到具有与其键值最接近的ID的节点上
+    
     - [深入浅出一致性Hash原理](https://www.jianshu.com/p/e968c081f563)
+ 
   - 散列链一次性口令
+    
     - 散列链是一种由单个密钥或密码生成多个一次性密钥或密码的一种方法. 例如`h^4(x) = h(h(h(h(x))))`
+    
     - 作为一种在非安全环境中的密码保护方案
+      
       - 服务器储存用户提供的口令`h^1000(password)`
+      
       - 验证时, 用户提供`h^999(password)`, 服务器验证`h(h^999(password))`
+      
       - 如果验证成功, 服务器更新口令为`h^999(password)`
+    
     - [哈希链](https://baike.baidu.com/item/%E5%93%88%E5%B8%8C%E9%93%BE/10230309)
     
 - 常见攻击
+  
   - 暴力破解
+    
     - 对抗: 强制信息的长度, 加盐(salt)
+  
   - 生日攻击
+    
     - [抗碰撞性、生日攻击及安全散列函数结构解析](https://blog.csdn.net/jerry81333/article/details/52763070/)
+  
   - 长度扩展攻击
+    
     - 利用MD5, SHA等散列函数直接把状态向量作为输出的漏洞, 把已知的散列值作为初始状态向量, 通过操纵明文的后缀, 来获取特定的散列值.
+    
     - ![hash-length-extension-attack.png](img/hash-length-extension-attack.png)
+    
     - 能有效规避加盐(salt)
+    
     - 对抗: HMAC
+    
     - [MD5的Hash长度扩展攻击](https://www.cnblogs.com/p00mj/p/6288337.html)
 
 ## HMAC
 
 - 定义
+
   - 利用散列算法(Hash)，以一个密钥和一个消息为输入，生成一个消息摘要作为消息认证码 (MAC).
+  
   - `HMAC（K，M）=H（K⊕opad∣H（K⊕ipad∣M）`
+  
   - ![HMAC simplified](img/hmac_simple.jpg)
+  
   - ![HMAC detailed](img/hmac_detail.png)
+  
   - [rfc2104](https://tools.ietf.org/html/rfc2104)
+  
 - 算法结构
+  
   - [HMAC的图解](https://blog.csdn.net/chengqiuming/article/details/82822933)
+  
   - [知乎: HMAC与MAC算法在密码学的区别？](https://www.zhihu.com/question/26605600/answer/33382509)
+
 - 目的
+
   - 完整性 (Integrity)
+  
   - 可认证性 (authenticity)
+  
 - 安全性与常见攻击
+  
   - 引入了密钥，其安全性已经不完全依赖于所使用的HASH算法, 能对抗暴力破解和长度扩展攻击
+  
   - 重放攻击
+  
 - 应用
+  
   - “质疑/应答”(Challenge/Response)
+    
     - ![HMAC authentication](img/hmac_authentication.png)
+    
     - 注册时, 分发给用户API Key (key)
+    
     - 验证时, 发送一段随机字符串(challenge)给用户
+    
     - 用户计算HMAC(key, challenge), 并发送回服务器
+    
     - 服务器计算HMAC(key, challenge), 验证用户身份
+  
   - JWT (JSON Web Token)
+    
     - 在前后端分离的网页或Restful API中, 取代Session.
+    
     - 格式: header.playload.signature, 各部分以base64Url编码后, 以'.'分隔, signature支持以HMAC"签名"
+    
     - 好处
+    
       - 支持跨域 
+      
       ![Microservices architecture](img/microservices.png)
+      
       - 服务层无状态
+      
       - 可自定义载荷
+      
     - JWT 问题
+    
       - 有效期问题(用户登出, JWT任然有效)
+      
       - 默认不加密
+      
       - 盗用
       
 ## 加密算法
 
 - 性质
+
   - 混淆(Confusion)
+  
   - 扩散(Diffusion)
+  
     - 完全性 (Completeness): 每个输出位由多数输入位决定
+    
     - 雪崩效应 (Avalanche effect): 一个输入位改变会导致整个密文改变
+    
   - [Lecture 39:  Properties of Ciphers](https://www.cs.utexas.edu/~byoung/cs361/lecture39.pdf)  
+
 - 按方式分类
+
   - 分组加密
+  
     ![Block Cipher](img/block_cipher.jpg)
+    
     - 对明文进行分组，再对每一块进行加密
+    
     - 例: DES, AES
+    
     - 常见填充方式: 
+    
       - ZeroPadding: 直接补零. 
+      
       - PKCS7Padding: 块大小可自定义. 如果原文需要填充, 则填充n个值为n的字节.
+      
       - PKCS5Padding: PKCS7Padding子集, 定义块大小为8.
-    - 优点:
+      
+    - 优点
+    
       - 扩散度高
+      
       - 可保证完整性
+      
       - 可伸缩性(malleability)低
+      
     - 缺点: 
+    
       - 速度慢
+      
       - 错误传播
+      
   - 串流加密
+  
     ![Stream Cipher](img/stream_cipher.gif)
+    
     - 明文数据每次与密钥数据流(例如伪随机加密数据流)顺次对应加密
+    
     - 例: Cesar, One-Time-Pad, RC4 (WEP加密方法)
+    
     - 优点:
+    
       - 速度快
+      
       - 无错误传播
+      
     - 缺点: 
+    
       - 扩散度低
+      
       - 不保证完整性
+      
       - 可伸缩性(malleability)高
+      
   - [Lecture 45: Stream and Block Encryption](https://www.cs.utexas.edu/~byoung/cs361/lecture45.pdf)
+
 - 按密钥分类
+
   - 对等 / 私钥加密 (Symmetric / Private Key Encryption)
+  
   ![Symmetric Encryption](img/Symmetric-Encryption.png)
   
   - 非对等 / 公钥加密 (Asymmetric / Public Key Encryption)
+  
   ![Asymmetric Encryption](img/Asymmetric-Encryption.png)
+  
 - 基本加密算法
+
   - 取代加密(Substitution)
+  
     - 增加非线性型
+    
   - 换位加密(Transposition)
+  
     - 增加扩散性
+    
 - 历史
+
   - 凯撒加密 (Cesar Cypher)
+  
     ![Cesar Cypher](img/cesar-cypher.png)
+    
     - 明文中的所有字母都在字母表上向后（或向前）按照一个固定数目进行偏移后被替换成密文
+    
   - 维吉尼亚加密 (Vigenère Cipher)
+  
     - 使用一系列凯撒密码组成密码字母表的加密算法
+    
   - 一次性密码本 (One-Time-Pad)
+  
     ![One-Time-Pad Cypher](img/one-time-pad.jpg)
+    
     - 密码随机, 长度至少等于明文, 且只使用一次
+    
     - (信息学)理论上的的完美加密(Perfect cypher)
+    
     - 实践中, 易受到明文攻击 
+    
       - 已知明文`P`, 密文`P xor K`, 可伪造 `P xor K xor K2`, 使其解密为`P xor K2`. 
+
 - 常见问题
+
   - 密钥分发
+  
   - 密钥管理
   
 ## 对等 / 私钥加密 (Symmetric / Private Key Encryption)
 
 - 定义 
+
   ![Symmetric Encryption](img/Symmetric-Encryption.png)
+  
   - 加密和解密都使用同一个密钥的加密方法
 
 - 目的
+
   - 私密性 (Privacy)
+  
   - 完整性 (Integrity)
+  
   - 可认证性 (Authenticity)
  
 - 密钥分发
@@ -254,22 +441,35 @@
   ![对称加密密钥分发](img/sym-encry.png)
   
   - 例如: 通过非对称加密算法
+  
 - 密钥管理
+
   - n^2个密钥以确定n个个体点对点加密
   
 - 常见结构
+
   - Feistel Cipher
+  
   ![Feistel Cipher](img/feistel_structure.jpg)
     
 - 常见攻击
+
   - 暴力破解
+  
   - 差分分析 (Differential Analysis)
+  
   - 字典攻击 (Dictionary Attack)
+  
   - 频率分析 (Frequency Analysis)
+  
   - 重放攻击 (Replay Attack)
+  
   - 功耗分析 (Power Analysis)
+  
   - 时间分析 (Timing Analysis)
+  
   - [Attacks on Symmetric Key](https://www.cs.clemson.edu/course/cpsc424/material/Cryptography/Attacks%20on%20Symmetric%20Key.pdf)
+  
   - [Week9 - part 2 - Symmetric Key Encryption.pdf](https://www.ics.uci.edu/~stasio/ics8-w12/Week9%20-%20part%202%20-%20Symmetric%20Key%20Encryption.pdf)
 
 - 代表算法
@@ -379,9 +579,13 @@
           与循环密钥XOR 
           
     - [Lecture 46: Advanced Encryption Standard](https://www.cs.utexas.edu/~byoung/cs361/lecture46.pdf)
+  
   - 其他算法:
+  
     - RC4 / RC5
+    
     - Blowfish
+    
     - IDEA
  
 - 分组密码的加密模式 (Encryption Mode)
@@ -395,9 +599,13 @@
   ![ECB Disctionary attack](img/ECB_example.png)
   
   - 优点
+  
     - 并行计算
+    
   - 缺点
+  
     - 确定性 (Deterministic)
+    
     - 易受字典攻击 (Dictionary Attack)
   
   - CBC (Cipher Block Chaining)
@@ -407,9 +615,13 @@
   ![CBC_decr](img/CBC_decr.png)
   
   - 优点
+  
     - 伪随机性
+    
   - 缺点
+  
     - 错误传播广
+    
     - 串行计算
   
   - OFB (Output Feedback)
@@ -419,9 +631,13 @@
   ![OFB_decr](img/OFB_decr.png)
   
   - 优点
+  
     - 伪随机性
+    
     - 错误隔离
+    
   - 缺点
+  
     - 串行计算
   
   - CFB (Cipher Feedback)
@@ -431,9 +647,13 @@
   ![CFB_decr](img/CFB_decr.png)
   
   - 优点
+  
     - 伪随机性
+    
   - 缺点
+  
     - 错误影响临近块
+    
     - 串行计算
   
   - CTR (Counter)
@@ -543,18 +763,27 @@
   - 注意与加密的区别 ![public_key_encryption](img/public_key_encryption_simple.png)
   
 - 目的
+
   - 完整性 (Integrity)
+  
   - 可认证性 (Authenticity)
+  
   - 不可否认性  (Non-repudiation)
 
 - 消息摘要与数字签名
+
   - 使用非对称加密原始文件效率低
+  
   - 解决办法：对文件的消息摘要签名
+  
   - 例如: Md5withRSA 先计算MD5消息摘要, 再用RSA对消息摘要签名
   
 - 常用算法
+
   - Md5withRSA
+  
   - SHA1withRSA
+  
   - 椭圆曲线数字签名算法（ECDSA）
 
 - 散列, HMAC与数字签名的对比
