@@ -1,8 +1,13 @@
 package lzhou.learning.hash.hashbin.controller;
 
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @Description: 散列链一次性口令
@@ -20,19 +25,29 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("ajax/hash-chain-otp")
 public class HashChainOtpAjaxDemoController {
-    private byte[] hash = new byte[0];
+    private String hash = "";
 
-    @PostMapping(value="set-hash", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void setHash(@RequestBody byte[] hash) {
+    @PostMapping(value="init-hash", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public void initHash(@RequestBody String hash) {
         this.hash = hash;
     }
 
-    @PostMapping(value="validate", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public boolean validate(@RequestBody byte[] hash) {
-        if (Hashing.md5().hashBytes(hash).equals(this.hash)) {
+    @PostMapping(value="validate", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public boolean validate(@RequestBody String hash) {
+        if (BaseEncoding.base16().encode(Hashing.md5().hashBytes(BaseEncoding.base16().decode(hash)).asBytes())
+                .equals(this.hash)) {
             this.hash = hash;
             return true;
         }
         return false;
+    }
+
+    @PostMapping(value="hashchain", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String hashchain(@RequestParam String password, @RequestParam Integer iteration) throws IOException {
+        byte[] hashCode = password.getBytes();
+        for (int i=0; i<iteration; ++i) {
+            hashCode = Hashing.md5().hashBytes(hashCode).asBytes();
+        }
+        return BaseEncoding.base16().encode(hashCode);
     }
 }

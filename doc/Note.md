@@ -12,7 +12,7 @@
 
 ## 编码
 
-- 用途
+- 目的
   - 方便二进制数据在文本协议里传输 (例如MIME, URL)
 - 常用编码
   - Base16 / Hex
@@ -27,9 +27,9 @@
   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
   - 编码效率: 编码后为源文件大小的8/5
 - Base64 编码
- - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
- - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
- - 编码效率: 编码后为源文件大小的4/3
+  - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
+  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
+  - 编码效率: 编码后为源文件大小的4/3
 - Base64Url 编码
   - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
@@ -50,15 +50,18 @@
     - 单向性(抗原相性)
     - 抗碰撞性(抗第二原相性)
     - 强伪随机性(敏感性, 均衡性, 非线性性)
-- 功能
+- 目的
   - 分桶 (Hash Table)
   - 消息摘要 (Message Digest)
   - 完整性 (Integrity)
 - 算法结构
-  - 初始化状态向量, 把消息分块后, 级联非线性方程, 根据最终的状态向量输出
+  - 初始化状态向量, 把消息分组后, 级联非线性方程, 根据最终的状态向量输出
   - [常见的Hash算法(General Purpose Hash Function Algorithms)](https://blog.csdn.net/wwchao2012/article/details/80316862)
 - 代表算法
   - (CRC-m 循环冗余校验码)
+  
+  ![crc32](img/crc32.jpg)
+  
     - 原始帧与预先确定的除数(m+1位)进行模2除法运算，余数(m位)作为CRC校验码
     - 多用于底层通信的校验
     - 随机性差
@@ -71,11 +74,17 @@
     - 通用散列算法, 可通过改变seed生成一组散列函数
     - [BKDRhash ](https://www.cnblogs.com/ldy-miss/p/6099454.html)
   - MD5 (Message Digest 5)
+  
+    ![MD5](img/MD5.png)
+  
     - 四个状态变量, 四个非线性操作函数, 对每块(512位)进行64步计算
     - 摘要长度: 128位
     - 王小云于2004年破解
     - [信息摘要算法之一：MD5算法解析及实现 ](https://www.cnblogs.com/foxclever/p/7668369.html)
   - SHA1 (Secure Hash Algorithm 1)
+  
+    ![SHA1](img/sha1.png)
+    
     - 五个状态变量, 四个非线性操作函数, 对每块(512位)进行80步计算
     - 摘要长度: 160位散列值
     - 王小云于2005年破解
@@ -84,7 +93,9 @@
     - 八个状态变量, 六个非线性操作函数, 对每块(512位)进行64步计算
     - 摘要长度: 256位散列值
     - [比特币算法——SHA256算法介绍](https://blog.csdn.net/wowotuo/article/details/78907380)
+
 - 高级应用简介
+
   - 工作量证明 (Proof-of-Work)
     - ![Proof of Work](img/proof_of_work.jpg)
     - 比特币区块链通过竞争记账方式解决去中心化的账本一致性问题
@@ -138,12 +149,12 @@
 - 算法结构
   - [HMAC的图解](https://blog.csdn.net/chengqiuming/article/details/82822933)
   - [知乎: HMAC与MAC算法在密码学的区别？](https://www.zhihu.com/question/26605600/answer/33382509)
-- 功能
+- 目的
   - 完整性 (Integrity)
   - 可认证性 (authenticity)
-- 安全性
-  - 引入了密钥，其安全性已经不完全依赖于所使用的HASH算法
-  - 能对抗暴力破解和长度扩展攻击
+- 安全性与常见攻击
+  - 引入了密钥，其安全性已经不完全依赖于所使用的HASH算法, 能对抗暴力破解和长度扩展攻击
+  - 重放攻击
 - 应用
   - “质疑/应答”(Challenge/Response)
     - ![HMAC authentication](img/hmac_authentication.png)
@@ -175,7 +186,7 @@
 - 按方式分类
   - 分组加密
     ![Block Cipher](img/block_cipher.jpg)
-    - 对明文进行分块，再对每一块进行加密
+    - 对明文进行分组，再对每一块进行加密
     - 例: DES, AES
     - 常见填充方式: 
       - ZeroPadding: 直接补零. 
@@ -232,6 +243,11 @@
 - 定义 
   ![Symmetric Encryption](img/Symmetric-Encryption.png)
   - 加密和解密都使用同一个密钥的加密方法
+
+- 目的
+  - 私密性 (Privacy)
+  - 完整性 (Integrity)
+  - 可认证性 (Authenticity)
  
 - 密钥分发
 
@@ -247,73 +263,126 @@
     
 - 常见攻击
   - 暴力破解
+  - 差分分析 (Differential Analysis)
   - 字典攻击 (Dictionary Attack)
   - 频率分析 (Frequency Analysis)
   - 重放攻击 (Replay Attack)
   - 功耗分析 (Power Analysis)
   - 时间分析 (Timing Analysis)
-  - 差分分析 (Differential Analysis)
   - [Attacks on Symmetric Key](https://www.cs.clemson.edu/course/cpsc424/material/Cryptography/Attacks%20on%20Symmetric%20Key.pdf)
   - [Week9 - part 2 - Symmetric Key Encryption.pdf](https://www.ics.uci.edu/~stasio/ics8-w12/Week9%20-%20part%202%20-%20Symmetric%20Key%20Encryption.pdf)
 
 - 代表算法
+
   - DES (Data Encryption Standard)
+  
     - 块长度: 64 位
+    
     - 密钥长度: 56位有效密钥 + 8位奇偶校验码 = 64位
+    
     - 循环步数: 16
+    
     - 基本结构 
+    
     ![基本结构](img/des_structure.jpg)
+    
       - 初始和结束置换
+      
       无实际密码学意义
+      
       ![des initial and final permutation](img/des_initial_and_final_permutation.jpg)
+      
       - Key Generation
+      
       生成循环密钥
+      
       ![Key Generation](img/des_key_generation.jpg)
+      
       - Round Function
+      
       ![Round Function](img/des_round_function.jpg)
+      
         - Expansion P Box
+        
         ![Expansion P Box](img/des_permutation_logic.jpg)
+        
         - Whitener
+        
         与循环密钥XOR 
+        
         - S-Boxes
+        
         ![S-Boxes](img/des-s-boxes.jpg)
+        
         ![S-Boxes](img/des_s_box_rule.jpg)
+        
         - Straight Permutation
+        
         ![Straight Permutation](img/des_permutation.jpg)
   
   - 3DES (Tripple DES)
+  
     - `E(D(E(M, K1), K2), K3)` 
+    
     - 基本结构 
+    
     ![基本结构](img/3DES.jpg)
+    
     - 当三个密钥互不相关, 密钥长度为118位.
+    
     - 当三个密钥完全相同, 兼容DES.
+    
     - 2DES是否相对安全?
+    
       - `C = E(E(M, K1), K2)`
+      
       - Meet In the Middle Attack, 明文攻击, 已知明文M和密文C
+      
         1. 预计算`E(M, Kn) for all Kn`
+        
         2. 计算`D(C, Km) for all Km`, 与预计算匹配
+        
         - 空间复杂度: 2^56, 时间复杂度: 2^56
       
   - AES (Advanced Encryption Standard)
+  
     - 块长度: 128 位
+    
     - 密钥长度: 128, 192, 以及256 位
+    
     - 循环步数: 10(128位), 12(192位), 14(256位) 
+    
     - 基本结构 
+    
       ![AES Structure](img/aes_structure.jpg)
+      
         - 循环:
+        
           ![AES Round](img/aes_first_round_process.jpg)
+          
           每16字节(128位)被安排为4x4矩阵
+          
           1. subBytes
+          
           每个字节被置换
+          
           2. shiftRows
+          
           每行按行数平移
+          
           3. mixColumns
+          
           每列经过计算, 生成新的列, 并替换原始列
+          
           4. addRoundKey
+          
           与循环密钥XOR 
+          
     - [Lecture 46: Advanced Encryption Standard](https://www.cs.utexas.edu/~byoung/cs361/lecture46.pdf)
-  - RC4
-  - Blowfish
+  - 其他算法:
+    - RC4 / RC5
+    - Blowfish
+    - IDEA
  
 - 分组密码的加密模式 (Encryption Mode)
 
@@ -379,6 +448,8 @@
     - 预计算
     - 并行计算
     - 错误隔离
+    
+  - [加密技术简介](https://blog.csdn.net/weixin_28774815/article/details/81359015)
   
 ## 非对等 / 公钥加密 (Asymmetric / Public Key Encryption)
 
@@ -386,15 +457,84 @@
   ![Asymmetric Encryption](img/Asymmetric-Encryption.png)
   - 由对应的一对唯一性密钥（即公开密钥和私有密钥）组成的加密方法
   
-- 常见问题
-  - 密钥分发
+- 特点
+  
+  - 密钥成对出现
+  
+  - 公钥加密的信息只能私钥解开，私钥加密的信息只能公钥解开
+  
+  - 信息传输1对多
+
+- 目的
+
+  - 私密性 (Privacy)
+  
+  - 完整性 (Integrity)
+  
+  - 可认证性 (Authenticity)
+  
+  - 不可否认性  (Non-repudiation)
+  
+- 密钥分发
     
-    ![非对等加密密钥分发](img/asym-encry.png)
+  ![非对等加密密钥分发](img/asym-encry.png)
    
-    - 通过CA分发公钥
-  - 密钥管理
-    - n对密钥以确定n个个体点对点加密
+  - 通过CA分发公钥
+    
+- 密钥管理
+  
+  - n对密钥以确定n个个体点对点加密
+    
+- 代表算法
+
+  - RSA
+  
+    - 数论基础
+    
+      - 欧拉函数(φ(1)): 对正整数n，欧拉函数是小于n的正整数中与n互质的数的数目(φ(1)=1) 
+        - [欧拉函数](https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1944850?fr=aladdin)
       
+      - 欧拉函数性质
+        - 当`n=pq`, `p`和`q`为质数时, `φ(n) = (p-1)(q-1)`
+        - 当`p`为质数时, `φ(p) = (p-1)`
+        
+      - 欧拉定理: `a^φ(n) ≡ 1 (mod n)`.
+      
+        - [费马小定理、欧拉定理与扩展欧拉定理](https://blog.csdn.net/hzj1054689699/article/details/80693756)
+    
+    - 思想
+    
+      - 对任意整数k, `M^(k*φ(n)) ≡ 1 (mod n)`
+      - `M^(k*φ(n)+1) ≡ M (mod n)` 当 `M < n`
+      - `M^(e*d) ≡ M (mod n)`, 当 `e*d = 1 (mod φ(n))`
+      - 密钥对为`(e, n)` 和 `(d, n)`
+      
+    - 加密
+    
+      - `C = M^e`
+    
+    - 解密
+    
+      - `M = C^d`
+      
+- 其他算法
+  
+  - 椭圆曲线密码 (ECC)
+  
+- 缺点
+  
+  - 计算复杂，加密速度慢
+
+- 常见攻击
+  
+  - 中间人攻击
+  
+- 应用
+
+  - 数字签名
+  
+  - 交换对称加密的密钥
+  
 ## 数字签名 / 私钥签名 (Digital Signature / Private Key Signing)
     
 - 定义
@@ -402,7 +542,7 @@
   - 使用了公钥加密领域的技术实现，用于鉴别数字信息的方法
   - 注意与加密的区别 ![public_key_encryption](img/public_key_encryption_simple.png)
   
-- 功能
+- 目的
   - 完整性 (Integrity)
   - 可认证性 (Authenticity)
   - 不可否认性  (Non-repudiation)
@@ -417,20 +557,107 @@
   - SHA1withRSA
   - 椭圆曲线数字签名算法（ECDSA）
 
-## 散列, HMAC与数字签名的对比
+- 散列, HMAC与数字签名的对比
+    
+  - 完整性 (Integrity): 接收方能否确认信息未被修改?
+    
+  - 可认证性 (Authenticity): 接收方能否确认信息来自发送方?
+    
+  - 不可否认性 (Non-repudiation): 如果接收方把信息转交给第三方,第三方能否确认信息源自发送方?
+    
+    | 安全性能           | 加密用散列 |    MAC    |  数字签名             |
+    |:------------------|:---------:|:---------:|:--------------------:|
+    | 完整性             |  Yes      |    Yes    |   Yes                |
+    | 可认证性           |  No       |    Yes    |   Yes                |
+    | 不可否认性         |  No       |    No     |   Yes                |
+    | 密钥类型           | 无        | 对称       | 非对称                |
 
-[What are the difference between a digital signature, a MAC and a hash](https://crypto.stackexchange.com/questions/5646/what-are-the-differences-between-a-digital-signature-a-mac-and-a-hash/5647#5647)
+  [What are the difference between a digital signature, a MAC and a hash](https://crypto.stackexchange.com/questions/5646/what-are-the-differences-between-a-digital-signature-a-mac-and-a-hash/5647#5647)
+  
+## 公钥基础设施 (PKI, Public Key Infrastructure)
 
-- 完整性 (Integrity): 接收方能否确认信息未被修改?
+- 定义
 
-- 可认证性 (Authenticity): 接收方能否确认信息来自发送方?
+  - 包括硬件、软件、人员、策略和规程的集合，用来实现基于公钥密码体制的密钥和证书的产生、管理、存储、分发和撤销等功能. [公钥基础设施](https://baike.baidu.com/item/%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/10881894?fr=aladdin)
 
-- 不可否认性 (Non-repudiation): 如果接收方把信息转交给第三方,第三方能否确认信息源自发送方?
+- 目的
 
-| 安全性能           | 加密用散列 |    MAC    |  数字签名             |
-|:------------------|:---------:|:---------:|:--------------------:|
-| 完整性             |  Yes      |    Yes    |   Yes                |
-| 可认证性           |  No       |    Yes    |   Yes                |
-| 不可否认性         |  No       |    No     |   Yes                |
-|-------------------|-----------|-----------|----------------------|
-| 密钥类型           | 无        | 对称       | 非对称                |
+  - 提供身份认证、数据完整性、数据保密性、数据公正性、不可抵赖性和时间戳六种安全服务
+  
+  - 例如: 确定HTTPS服务器所发放的公钥是真实的, 而不是中间人伪造的.
+  
+- 组成要素
+
+  - PKI策略
+  
+    - 公钥技术, 数字证书, 数据完整性
+  
+  - 软硬件系统
+  
+  - 证书机构CA (Certificate Authority)
+  
+    - 发放证书、规定证书的有效期和废除证书
+    
+  - 注册机构RA (Register Authority)
+  
+    - 获取并认证用户的身份，向CA提出证书请求
+    
+  - 证书发布系统
+  
+    - ![cert process](img/PKI_process.png)
+    
+    - ![cert chain](img/PKI_cert_chain.png)
+    
+  - PKI应用
+
+- 数字证书 (Digital / X.509 Certificate)
+  
+  - 主要内容
+  
+    - 公钥
+
+    - 申请人身份信息
+    
+    - 有效期
+    
+    - CA对证书的数字签名
+    
+    [数字证书详解](https://www.jianshu.com/p/3371740b7b02)
+    
+  - 私有CA与自签名证书 (以OpenSSL为例)
+    
+    - 密钥格式: 密钥文件的格式, PEM、DER、X509、PKCS这几种格式可以互相转化. PEM 的是将密钥用 base64 编码表示出来的, DER 格式是二进制的密钥文件. X509 是通用的证书文件格式定义. PKCS 的一系列标准是指定的存放密钥的文件标准.
+    
+    - 过程
+      
+      - 建立CA根证书
+      
+        - 生成CA私钥
+        
+        - 生成证书请求
+        
+        - 签发证书
+      
+      - 签发下级证书
+      
+        - 生成自己的私钥
+        
+        - 生成证书请求文件
+        
+        - 根证书签发下级证书
+        
+        TODO
+    
+    - [如何创建私有 CA 并签发证书](https://blog.csdn.net/weixin_34232744/article/details/87536879)
+    
+    - [OpenSSL 给自己颁发根证书，由根证书签发下级证书的步骤](https://www.cnblogs.com/kenshinobiy/p/7441819.html)
+    
+  - 证书安装 (以Firefox为例)
+    
+    - 打开[选项] -> [隐私和安全] -> [查看证书]菜单 -> 打开[导入证书]
+    
+    - [证书安装](img/firefox_install_cert.PNG)
+
+##  TLS/SSL协议
+
+  TODO
