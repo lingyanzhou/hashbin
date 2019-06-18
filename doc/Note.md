@@ -10,10 +10,10 @@
 
 [Foundations of Computer Security](https://www.cs.utexas.edu/~byoung/cs361/)
 
-## 编码
+## Base编码
 
 - 目的
-
+  
   - 方便二进制数据在文本协议里传输 (例如MIME, URL)
 
 - 常用编码
@@ -146,6 +146,7 @@
     - 王小云于2005年破解
     
     - [信息摘要算法之二：SHA1算法分析及实现](https://www.cnblogs.com/foxclever/p/8282366.html)
+ 
   - SHA256
    
     - 八个状态变量, 六个非线性操作函数, 对每块(512位)进行64步计算
@@ -154,7 +155,9 @@
     
     - [比特币算法——SHA256算法介绍](https://blog.csdn.net/wowotuo/article/details/78907380)
 
-- 高级应用简介
+- 应用
+
+  - 伪随机数
 
   - Web API 混淆ID (Hash ID)
     
@@ -440,7 +443,7 @@
 
 - 目的
 
-  - 私密性 (Privacy)
+  - 私密性 (Privacy / Confidentiality)
   
   - 完整性 (Integrity)
   
@@ -494,7 +497,9 @@
     
     - 基本结构 
     
-    ![基本结构](img/des_structure.jpg)
+    ![基本结构](img/des_structure_detail.jpg)
+    
+    [Feistle Cipher](https://www.tutorialspoint.com/cryptography/feistel_block_cipher.htm)
     
       - 初始和结束置换
       
@@ -512,23 +517,23 @@
       
       ![Round Function](img/des_round_function.jpg)
       
-        - Expansion P Box
+      - Expansion P Box
         
-        ![Expansion P Box](img/des_permutation_logic.jpg)
+      ![Expansion P Box](img/des_permutation_logic.jpg)
         
-        - Whitener
+      - Whitener
         
-        与循环密钥XOR 
+      与循环密钥XOR 
         
-        - S-Boxes
+      - S-Boxes
         
-        ![S-Boxes](img/des-s-boxes.jpg)
+      ![S-Boxes](img/des-s-boxes.jpg)
         
-        ![S-Boxes](img/des_s_box_rule.jpg)
+      ![S-Boxes](img/des_s_box_rule.jpg)
         
-        - Straight Permutation
+      - Straight Permutation
         
-        ![Straight Permutation](img/des_permutation.jpg)
+      ![Straight Permutation](img/des_permutation.jpg)
   
   - 3DES (Tripple DES)
   
@@ -576,17 +581,23 @@
           
           每个字节被置换
           
+          ![AES subBytes](img/aes_subbytes.jpg)
+          
           2. shiftRows
           
           每行按行数平移
+          
+          ![AES shiftRows](img/aes_shiftrows.jpg)
           
           3. mixColumns
           
           每列经过计算, 生成新的列, 并替换原始列
           
+          ![AES mixColumns](img/aes_mixcolumn.jpg)
+          
           4. addRoundKey
           
-          与循环密钥XOR 
+          与循环密钥XOR
           
     - [Lecture 46: Advanced Encryption Standard](https://www.cs.utexas.edu/~byoung/cs361/lecture46.pdf)
   
@@ -709,7 +720,7 @@
     
   ![非对等加密密钥分发](img/asym-encry.png)
    
-  - 通过CA分发公钥
+  - 通过证书机构CA分发公钥
     
 - 密钥管理
   
@@ -731,12 +742,22 @@
       - 欧拉定理: `a^φ(n) ≡ 1 (mod n)`.
       
         - [费马小定理、欧拉定理与扩展欧拉定理](https://blog.csdn.net/hzj1054689699/article/details/80693756)
-    
+      
+      - 扩展欧几里德算法
+        
+        - 已知`a`, `b`求解一组`x`，`y`使得`ax+by = Gcd(a, b) =d`
+        
+        - [扩展欧几里德算法](https://baike.baidu.com/item/%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E7%AE%97%E6%B3%95/1053275?fr=aladdin)
     - 思想
     
-      - 对任意整数k, `M^(k*φ(n)) ≡ 1 (mod n)`
+      - 对任意整数k, `M^(k*φ(n)) ≡ 1 (mod n)` [欧拉定理]
+      
       - `M^(k*φ(n)+1) ≡ M (mod n)` 当 `M < n`
+      
       - `M^(e*d) ≡ M (mod n)`, 当 `e*d = 1 (mod φ(n))`
+      
+      - 可任已选择`e` (如3), 求解`d` [扩展欧几里德算法]
+      
       - 密钥对为`(e, n)` 和 `(d, n)`
       
     - 加密
@@ -768,8 +789,11 @@
 ## 数字签名 / 私钥签名 (DSA / Digital Signature / Private Key Signing)
     
 - 定义
+
   ![Private keyimg/signing](img/Private_key_signing.png)
+  
   - 使用了公钥加密领域的技术实现，用于鉴别数字信息的方法
+  
   - 注意与加密的区别 ![public_key_encryption](img/public_key_encryption_simple.png)
   
 - 目的
@@ -797,6 +821,14 @@
   - RSA2 / SHA256withRSA [RSA和RSA2签名算法区别 ](https://docs.open.alipay.com/291/106115)
   
   - 椭圆曲线数字签名算法（ECDSA）
+  
+- 应用
+
+  - TSL / SSL
+  
+  - 电子政务 
+    
+    - [让群众少跑腿，政府工作报告说要这么干 ](http://www.sohu.com/a/302489296_100143761)
 
 - 散列, HMAC与数字签名的对比
     
@@ -831,7 +863,7 @@
 
   - PKI策略
   
-    - 公钥技术, 数字证书, 数据完整性
+    - 公钥技术, 数字证书, 数据完整性算法
   
   - 软硬件系统
   
@@ -851,7 +883,7 @@
     
   - PKI应用
 
-- 数字证书 (Digital / X.509 Certificate)
+- 数字证书 (Digital Certificate / X.509 Certificate)
   
   - 主要内容
   
@@ -865,7 +897,47 @@
     
     [数字证书详解](https://www.jianshu.com/p/3371740b7b02)
     
-  - 私有CA与自签名证书 (以OpenSSL为例)
+  - 自签名证书 (Self-Signed Certificate) 
+  
+    - 过程
+     
+      1. 生成私钥
+       
+       ```sh
+       openssl genrsa -aes256 -out privkey.pem 2048
+       ```
+      
+      2. 生成证书请求
+       
+        ```sh
+        openssl req -new -key privkey.pem -out signreq.csr -subj "/CN=lzhou"
+        ```
+      
+      3. 用步骤1中的私钥签发证书
+      
+        ```sh
+        openssl x509 -req -days 365 -in signreq.csr -signkey privkey.pem -out certificate.crt
+        ```
+      
+    - 一键生成
+      
+      - OpenSSL
+      
+      ```sh
+      openssl req -x509 -sha256 -newkey rsa:2048 -keyout certificate.key -out certificate.crt -days 1024 -nodes -subj "/CN=lzhou"
+      ```
+      
+      - Java Keytool
+    
+      ```sh
+      keytool -genkey -alias tomcat -keyalg RSA -keystore tomcat.keystore
+      ```
+      
+    - 在Nginx中使用
+      
+    - 在SpringBoot中使用
+    
+  - 私有CA
     
     - 密钥格式: 密钥文件的格式, PEM、DER、X509、PKCS这几种格式可以互相转化. PEM 的是将密钥用 base64 编码表示出来的, DER 格式是二进制的密钥文件. X509 是通用的证书文件格式定义. PKCS 的一系列标准是指定的存放密钥的文件标准.
     
@@ -875,9 +947,21 @@
       
         - 生成CA私钥
         
+        ```sh
+        openssl genrsa -aes256 -out privkey.pem 2048
+        ```
+        
         - 生成证书请求
         
+        ```sh
+        openssl req -new -key privkey.pem -out signreq.csr -subj "/C=US/ST=NRW/L=Earth/O=CompanyName/OU=IT/CN=www.example.com/emailAddress=email@example.com"
+        ```
+        
         - 签发证书
+        
+        ```sh
+        openssl x509 -req -days 365 -in signreq.csr -signkey privkey.pem -out certificate.pem
+        ```
       
       - 签发下级证书
       
@@ -899,27 +983,65 @@
     
     - [证书安装](img/firefox_install_cert.PNG)
     
-## 密码储存文件 // TODO
+- 术语表
 
-- PEM 
+  - IETF (The Internet Engineering Task Forc): 国际互联网工程任务组是一个公开性质的大型民间国际团体，汇集了与互联网架构和互联网顺利运作相关的网络设计者、运营者、投资人和研究人员, 主要任务是负责互联网相关技术规范的研发和制定.
+  
+  - PSRG (Privacy and Security Research Group): 隐私和安全研究小组
+  
+  - ISOC (Intenet Society): 国际互联网协会是一个全球性的以目标为导向的组织, 致力于确保互联网保持开放、透明并且是由用户定义的.
+  
+  - RFC (Request For Comments): 请求评议文件是由IETF发布的一系列备忘录. 文件收集了有关Internet相关信息,以及UNIX和Internet社区的软件文件.
+  
+  - CA (Certificate Authority) : 证书机构 
+  
+  - RA (Register Authority): 注册机构 
+  
+  - X.509: 规定了证书可以包含什么信息，并说明了记录信息的方法（数据格式）.
+    X.509证书包含版本, 序列号, 签名算法标识符, 签发人姓名, 有效期, 主体名, 主体公钥信息
 
-- PKCS
- 
-- X509
+    [X.509](https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-x-509-public-key-certificates)
+  
+  - PEM (Privacy Enhanced Mail): 规定了加密邮件的封装格式. 包含DEK-Info(数据加密密钥), Key-Info(DEK加密密钥), 加密后的数据和begin信息、end信息等. 以Base64
+  编码.
+  
+  [rfc1421](https://tools.ietf.org/html/rfc1421)
+  
+  - DER (Distinguished Encoding Rules): 规定了对任意数据对象的二进制编码. 一个数据对象被编码为标识符, 长度, 内容, 结束符. 数据对象可嵌套.
+  
+  [What is DER](http://www.herongyang.com/Cryptography/Certificate-Format-DER-Distinguished-Encoding-Rules.html)
+    
+  - PKCS: 公钥加密标准 (The Public-Key Cryptography Standards). 
+    由美国RSA数据安全公司及其合作伙伴制定的一组公钥密码学标准，其中包括证书申请、证书更新、证书作废表发布、扩展证书内容以及数字签名、数字信封的格式等方面的一系列相关协议.
+    
+    [PKCS](https://baike.baidu.com/item/PKCS/1042350?fr=aladdin)
+    
+  
+    
+## 常见密钥/证书储存格式 (Keystore / Certificate Format)
 
-- DER
+- 密钥库文件格式
 
-- CER, CRT
+|   格式      | 后缀               |    描述                    |   特点                               |
+|:-----------|:-----------------:|:--------------------------:|:------------------------------------:|
+|  JKS       |  .jks/.ks
+|  JCEKS     |  .jce
+|  PKCS12    |  .p12/.pfx
+|  BKS       |  .bks
+|  UBER      |  .ubr
 
-- PK8
+- 证书库文件格式
 
-- P7B, P7C
+|   格式      | 后缀               |    描述                    |   特点                               |
+|:-----------|:------------------:|:--------------------------:|:------------------------------------:|
+| DER        | .cer/.crt/.rsa     |
+| PEM        | .pem               |  Privacy Enhanced Mail 
+| PKCS7      | .p7b/.p7r
+| PKCS10     | .p10/.csr
+| CMS        | .p7c/.p7m/.p7s
+| SPC        | .pvk/.spc
 
-- PFX 
-
-- JKS 
-
-[.pem和.pk8是什么文件？](https://blog.csdn.net/qq_34352738/article/details/79360044)
+[常见密钥库文件格式及证书格式](http://blog.sina.com.cn/s/blog_53ab41fd010146vg.html)
 
 ##  TLS/SSL协议 // TODO
 

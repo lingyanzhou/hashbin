@@ -2,39 +2,15 @@ package lzhou.learning.hash.hashbin.controller;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.google.common.io.BaseEncoding;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 /**
- * @Description: 编码
- * - 用途
- *   - 方便二进制数据在文本协议里传输 (例如MIME, URL, HTML)
- * - 常用编码
- *   - Base16 / Hex
- *   - Base32
- *   - Base64
- * - Base16 / Hex 编码
- *   - 以每4比特为刻度编码, 16 == 2^4, 即每1字节编码为2字节
- *   - 码表: "0123456789ABCDEF", 不区分大小写
- *   - 编码效率: 编码后为源文件大小的2倍
- * - Base32 编码
- *   - 以每5比特为刻度编码, 32 == 2^5, 即每5字节编码为8字节
- *   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
- *   - 编码效率: 编码后为源文件大小的8/5
- * - Base64 编码
- *  - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
- *  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
- *  - 编码效率: 编码后为源文件大小的4/3
- * - Base64Url 编码
- *   - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
- *   - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
+ * @Description: Base 编码
  * @author: lingy
  * @Date: 2019-06-10 09:44:06
  * @param: null
@@ -42,12 +18,9 @@ import java.util.function.Function;
  */
 @RestController
 @RequestMapping("ajax/codec")
-public class CodecAjaxController {
+public class BaseEncodingAjaxController {
     /**
      * @Description: Base16 / Hex 编码
-     *  - 以每4比特为刻度编码, 2^4 == 16
-     *  - 码表: "0123456789ABCDEF" (不区分大小写)
-     *  - 编码效率: 编码后为源文件大小的2倍
      * @author: lingy
      * @Date: 2019-06-10 09:43:30
      * @param: data
@@ -64,9 +37,6 @@ public class CodecAjaxController {
     }
     /**
      * @Description: Base32 编码
-     *  - 以每5比特为刻度编码, 2^5 == 32
-     *  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-     *  - 编码效率: 编码后为源文件大小的8/5
      * @author: lingy
      * @Date: 2019-06-10 09:43:30
      * @param: data
@@ -83,9 +53,6 @@ public class CodecAjaxController {
     }
     /**
      * @Description: Base64 编码
-     *  - 以每6比特为刻度编码, 2^6 == 64
-     *  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-     *  - 编码效率: 编码后为源文件大小的4/3
      * @author: lingy
      * @Date: 2019-06-10 09:43:30
      * @param: data
@@ -102,8 +69,6 @@ public class CodecAjaxController {
     }
     /**
      * @Description: Base64Url 编码
-     * - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_"
-     * - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
      * @author: lingy
      * @Date: 2019-06-10 09:43:30
      * @param: data

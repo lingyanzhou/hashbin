@@ -10,9 +10,8 @@
         <input name="file" id="file" type="file" onchange="toDataUrl(this)" />
     </div>
     <div>
-        <pre id="pre">
-
-        </pre>
+        <textarea id="pre" rows="5" cols="80">
+        </textarea>
     </div>
     <div>
         <img id="img" alt="图片" />
@@ -22,7 +21,7 @@
 function toDataUrl(input) {
     file = input.files[0];
     if (window.FileReader) {
-        fileReader = new FileReader();
+        var  fileReader = new FileReader();
         fileReader.onloadend = function(e) {
             document.getElementById("img").src = e.target.result;
             document.getElementById("pre").innerText = e.target.result;
