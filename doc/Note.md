@@ -18,42 +18,42 @@
 
 - 常用编码
 
-  - Base16 / Hex
-
-  - Base32
-
-  - Base64
-
-- Base16 / Hex 编码
-
-  - 以每4比特为刻度编码, 16 == 2^4, 即每1字节编码为2字节
-
-  - 码表: "0123456789ABCDEF", 不区分大小写
-
-  - 编码效率: 编码后为源文件大小的2倍
-
-- Base32 编码
-
-  - 以每5比特为刻度编码, 32 == 2^5, 即每5字节编码为8字节
-
-  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
-
-  - 编码效率: 编码后为源文件大小的8/5
-
-- Base64 编码
-
-  - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
-
-  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
-
-  - 编码效率: 编码后为源文件大小的4/3
-
-- Base64Url 编码
-  
-  - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
-  
-  - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
+  - Base16 / Hex 编码
+    
+    - 以每4比特为刻度编码, 16 == 2^4, 即每1字节编码为2字节
+    
+    - 码表: "0123456789ABCDEF", 不区分大小写
+    
+    - 编码效率: 编码后为源文件大小的2倍
+    
+  - Base32 编码
+    
+    - 以每5比特为刻度编码, 32 == 2^5, 即每5字节编码为8字节
+    
+    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
+    
+    - 编码效率: 编码后为源文件大小的8/5
+    
+  - Base64 编码
+    
+    - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
+    
+    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
+    
+    - 编码效率: 编码后为源文件大小的4/3
+    
+  - Base64Url 编码
+      
+    - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
+      
+    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
      
+- 应用
+   
+  - Data URL里传输二进制文件
+  
+    - 例: 使用HTML5的FileReader生成本地图片预览
+
 ## 散列算法
 
 ![Hash(Food)](img/beefhash.jpg)
@@ -156,6 +156,16 @@
 
 - 高级应用简介
 
+  - Web API 混淆ID (Hash ID)
+    
+    - 不表现出递增的特征, 防止爬取
+    
+    - 例:
+    
+      - 对id加盐后, 求散列值
+      
+      - 对内容求散列值
+      
   - 工作量证明 (Proof-of-Work)
     
     - ![Proof of Work](img/proof_of_work.jpg)

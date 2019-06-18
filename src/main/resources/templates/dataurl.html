@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Url</title>
+</head>
+<body>
+<div>
+    <div>
+        <input name="file" id="file" type="file" onchange="toDataUrl(this)" />
+    </div>
+    <div>
+        <pre id="pre">
+
+        </pre>
+    </div>
+    <div>
+        <img id="img" alt="图片" />
+    </div>
+</div>
+<script>
+function toDataUrl(input) {
+    file = input.files[0];
+    if (window.FileReader) {
+        fileReader = new FileReader();
+        fileReader.onloadend = function(e) {
+            document.getElementById("img").src = e.target.result;
+            document.getElementById("pre").innerText = e.target.result;
+        };
+
+        fileReader.readAsDataURL(file)
+    }
+}
+</script>
+</body>
+</html>
