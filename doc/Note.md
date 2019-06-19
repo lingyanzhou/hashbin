@@ -997,49 +997,70 @@
   
   - RA (Register Authority): 注册机构 
   
-  - X.509: 规定了证书可以包含什么信息，并说明了记录信息的方法（数据格式）.
+  - X.509: 通用的证书格式. 规定了证书可以包含什么信息，并说明了记录信息的方法（数据格式）.
     X.509证书包含版本, 序列号, 签名算法标识符, 签发人姓名, 有效期, 主体名, 主体公钥信息
 
     [X.509](https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-x-509-public-key-certificates)
   
   - PEM (Privacy Enhanced Mail): 规定了加密邮件的封装格式. 包含DEK-Info(数据加密密钥), Key-Info(DEK加密密钥), 加密后的数据和begin信息、end信息等. 以Base64
-  编码.
+  编码存放. 
   
   [rfc1421](https://tools.ietf.org/html/rfc1421)
   
-  - DER (Distinguished Encoding Rules): 规定了对任意数据对象的二进制编码. 一个数据对象被编码为标识符, 长度, 内容, 结束符. 数据对象可嵌套.
+  - DER (Distinguished Encoding Rules): 规定了对任意数据对象的二进制编码格式. 一个数据对象被编码为标识符, 长度, 内容, 结束符. 数据对象可嵌套.
   
   [What is DER](http://www.herongyang.com/Cryptography/Certificate-Format-DER-Distinguished-Encoding-Rules.html)
-    
-  - PKCS: 公钥加密标准 (The Public-Key Cryptography Standards). 
+  
+  - MIME(Multipurpose Internet Mail Extensions): 定义了在网络中二进制文件的传输协议.
+  
+  - S/MIME (Secure/MultipurposeInternet Mail Extensions): 定义了有公钥加密和数字签名的MIME数据的传输协议. 加密部分基于PKCS#7/CMS.
+     
+  - PKCS (The Public-Key Cryptography Standards): 公钥加密标准 . 
     由美国RSA数据安全公司及其合作伙伴制定的一组公钥密码学标准，其中包括证书申请、证书更新、证书作废表发布、扩展证书内容以及数字签名、数字信封的格式等方面的一系列相关协议.
     
     [PKCS](https://baike.baidu.com/item/PKCS/1042350?fr=aladdin)
     
+  - PKCS#1：RSA加密标准. 定义了RSA公/私钥的语法
+  
+  - PKCS#7 / CMS (Cryptographic Message Syntax)：密码消息语法标准. 规定了未加密或签名的格式化消息、已封装（加密）消息、已签名消息和既经过签名又经过加密的消息的语法. 是S/MIME的基础.
+  
+  - PKCS#10：证书请求语法标准. 证书请求包含了一个唯一识别名、公钥和可选的一组属性，它们一起被请求证书的实体签名.
+  
+  - PKCS#12：个人信息交换语法标准. 定义了个人身份信息（包括私钥、证书、各种秘密和扩展字段）的格式。
+  
+  - JKS (Java Keystore): 使用keytool生成的keystore文件，存放私钥和证书
+  
+  - JCEKS (Java Cryptography Extension KeyStore): 由JCE(Java Cryptography Extension)提供. 对其中的密钥使用3DES加密, 相比JKS更安全.
+  
+  [PKCS 发布的15 个标准](https://blog.csdn.net/book_xnlzh035/article/details/84179373)
   
     
 ## 常见密钥/证书储存格式 (Keystore / Certificate Format)
 
 - 密钥库文件格式
 
-|   格式      | 后缀               |    描述                    |   特点                               |
-|:-----------|:-----------------:|:--------------------------:|:------------------------------------:|
-|  JKS       |  .jks/.ks
-|  JCEKS     |  .jce
-|  PKCS12    |  .p12/.pfx
-|  BKS       |  .bks
-|  UBER      |  .ubr
+|   格式      | 后缀               |    描述                    |  
+|:-----------|:-------------------|:---------------------------|
+|  PEM       | .pem/.key          | PEM格式的密钥, 私钥或公钥    |
+|  DER       | .der/.key          | DER格式的密钥或公钥          |
+|  JKS       | .jks/.ks/.keystore | 私钥和证书                  |
+|  JCEKS     | .jce               | 私钥和证书                  |
+|  PKCS12    | .p12/.pfx          | 私钥和证书                  |
 
 - 证书库文件格式
 
-|   格式      | 后缀               |    描述                    |   特点                               |
-|:-----------|:------------------:|:--------------------------:|:------------------------------------:|
-| DER        | .cer/.crt/.rsa     |
-| PEM        | .pem               |  Privacy Enhanced Mail 
-| PKCS7      | .p7b/.p7r
-| PKCS10     | .p10/.csr
-| CMS        | .p7c/.p7m/.p7s
-| SPC        | .pvk/.spc
+|   格式             | 后缀               |    描述                     |
+|:-------------------|:-------------------|:---------------------------|
+| X509 (DEM/PEM)     | .cer/.crt          | 证书                       |
+| PKCS10 (DEM/PEM)   | .p10/.csr          | 证书请求                    |
+| PKCS7/CMS (DEM/PEM)| .p7b/.p7r/.spc     | 证书(链)                    |
+
+- 加密文件格式
+
+|   格式             | 后缀               |    描述                     |
+|:-------------------|:-------------------|:---------------------------|
+| PKCS7/CMS          | .p7c/.p7m/.p7s     | 秘密邮件                    |
+| S/MIME             | .smime             | 秘密邮件                    |
 
 [常见密钥库文件格式及证书格式](http://blog.sina.com.cn/s/blog_53ab41fd010146vg.html)
 
