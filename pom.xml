@@ -39,12 +39,6 @@
             <artifactId>guava</artifactId>
             <version>27.1-jre</version>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java-util -->
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java-util</artifactId>
-			<version>3.8.0</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

@@ -10,7 +10,7 @@ import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 
 /**
- * @Description: Base 编码
+ * @Description: 基编码(Base Encoding)
  * @author: lingy
  * @Date: 2019-06-10 09:44:06
  * @param: null

@@ -10,15 +10,17 @@
 
 [Foundations of Computer Security](https://www.cs.utexas.edu/~byoung/cs361/)
 
-## Base编码
+## 基编码(Base Encoding)
 
 - 目的
   
   - 方便二进制数据在文本协议里传输 (例如MIME, URL)
+  
+  - 方便使用文本编辑器编辑二进制数据
 
 - 常用编码
 
-  - Base16 / Hex 编码
+  - 基16编码 (Base16 / Hex)
     
     - 以每4比特为刻度编码, 16 == 2^4, 即每1字节编码为2字节
     
@@ -26,27 +28,33 @@
     
     - 编码效率: 编码后为源文件大小的2倍
     
-  - Base32 编码
+  - 基32编码 (Base32) 
     
     - 以每5比特为刻度编码, 32 == 2^5, 即每5字节编码为8字节
     
-    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写, 填充字符(可选): "="
+    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", 不区分大小写
+    
+    +- 填充字符(可选): "="
     
     - 编码效率: 编码后为源文件大小的8/5
     
-  - Base64 编码
+  - 基64编码 (Base64)
     
     - 以每6比特为刻度编码, 64 == 2^6, 即每3字节编码为4字节
     
-    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 填充字符(可选): "="
+    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+     
+    - 填充字符(可选): "="
     
     - 编码效率: 编码后为源文件大小的4/3
     
-  - Base64Url 编码
+  - 基64URL编码 Base64Url
       
-    - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_".
+    - 最常用的Base64变体. 把原Base64里的"+"和"/"分别替换为"-"和"_". 
       
-    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", 无填充字符
+    - 码表: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+    
+    - 无填充字符
      
 - 应用
    
@@ -464,6 +472,22 @@
   - Feistel Cipher
   
   ![Feistel Cipher](img/feistel_structure.jpg)
+  
+    - 一致的加解密结构, 节省硬件实现的成本
+    
+    - 设计原则
+    
+      - 块的大小
+      
+      - 密钥的大小
+      
+      - 循环次数（轮次数）
+      
+      - 循环密钥的生成算法
+      
+      - 轮函数的复杂度
+      
+      [Feistel](https://baike.baidu.com/item/Feistel/1985068)
     
 - 常见攻击
 
@@ -609,7 +633,7 @@
     
     - IDEA
  
-- 分组密码的加密模式 (Encryption Mode)
+- 分组密码的加密模式(迭代方法) (Encryption Mode)
 
   - ECB (Electronic Code Book)
   
@@ -924,7 +948,7 @@
       - OpenSSL
       
       ```sh
-      openssl req -x509 -sha256 -newkey rsa:2048 -keyout certificate.key -out certificate.crt -days 1024 -nodes -subj "/CN=lzhou"
+      openssl req -x509 -sha256 -newkey rsa:2048 -keyout certificate.key -out certificate.crt -days 1024 -nodes -subj "/CN=nginxhttps"
       ```
       
       - Java Keytool
@@ -1064,6 +1088,110 @@
 
 [常见密钥库文件格式及证书格式](http://blog.sina.com.cn/s/blog_53ab41fd010146vg.html)
 
-##  TLS/SSL协议 // TODO
+##  TLS/SSL协议
 
+- 定义
+
+  - TLS/SSL是为网络通信提供安全及数据完整性的一种安全协议。
+
+- 历史
+
+  - SSL是Secure Sockets Layer的简称, 在版本3后改名为TLS, TLS是Transport Layer Security的简称. 版本历史为SSLv2, SSLv3, TLSv1.0, TLSv1.1, TLSv1.2和tlsv1.3.
+
+- 功能
+
+  - 数据加密传输，防止窃听: 通过加密算法
   
+  - 可以进行数据完整性检查, 防篡改: 通过MAC验证码
+
+  - 可以进行身份验证: 通过交换数字证书
+
+- 组成
+  
+  - TLS/SSL 记录协议: 规定了TLS/SSL数据的格式. 位于可靠的网络传输协议(如TCP)之上.
+  
+    - 压缩算法, 加密算法, 消息验证码, 消息, 消息类型, 上层协议
+    
+    - MAC(消息, 消息类型, 序列号, nounce)
+    
+      - 序列号: 预防 
+      
+      - 消息类型: 防止截断攻击
+      
+      - 序列号: 防止乱序攻击
+      
+      - nounce: 预防重放攻击
+      
+      [Security at the Transport Layer](https://www.cs.rutgers.edu/~sn624/352-S19/lectures/21-sec.pdf)
+  
+  - 修改密文规约协议: 用于请求修改密码参数, 基于TLS/SSL 记录协议.
+  
+  - 告警协议:  用于告知对方通信过程中发现的任何异常, 基于TLS/SSL 记录协议.
+  
+    - 安全地终止链接
+  
+  [告警协议](https://wiki.mbalib.com/wiki/SSL%E8%AD%A6%E5%91%8A%E5%8D%8F%E8%AE%AE)
+  
+  - TLS/SSL 握手协议: 规定了握手过程, 基于TLS/SSL 记录协议.
+    
+    ![ssl handshake](img/ssl_handshake.png)
+  
+    以RSA密钥交换为例:
+    
+    - 客户端Hello
+    
+      - SSL版本
+      
+      - 会话标识
+      
+      - 客户端支持的算法列表和参数
+      
+      - 客户端支持的压缩列表
+      
+      - 随机数
+      
+    - 服务器端Hello
+    
+      - 服务器证书
+      
+      - 服务器公钥 (在证书内)
+      
+      - 客户端证书请求 (可选)
+    
+    - 客户端密钥交换
+    
+      - 随机生成预主密码
+      
+      - 若服务器端请求客户端证书, 则用私钥加密, 附上客户端证书
+      
+      - 结束密钥交换
+      
+      - 发送修改密文规约 (按规约交换通信主密钥)
+    
+     - 服务器端发送结束标志
+    
+      - 结束密钥交换
+            
+      - 发送修改密文规约 (按规约交换通信主密钥)
+    
+   [SSL握手协议](https://wiki.mbalib.com/wiki/SSL%E6%8F%A1%E6%89%8B%E5%8D%8F%E8%AE%AE)
+  
+- 应用
+
+  - Nginx 安装OpenSSL生成的数字证书
+  
+    - 监听SSL端口
+    
+    - 配置私钥, 证书
+  
+  ```
+  server {
+    ...
+    listen 443 ssl;
+    ssl_certificate /nginxhttps/nginxhttps.crt;
+    ssl_certificate_key /nginxhttps/nginxhttps.key;
+    ...
+  }
+  ```
+  
+  [数字证书、SSL、HTTPS及在Nginx中的配置](https://www.cnblogs.com/ajianbeyourself/p/3898911.html)
