@@ -1,0 +1,12 @@
+[ CA_default ]
+
+dir             = /etc/pki/CA           　　# 工作目录
+certs           = $dir/certs            　　# 客户端证书保存位置
+crl_dir         = $dir/crl             　　 # 证书吊销列表
+database        = $dir/index.txt　　　　　　　#证书列表
+new_certs_dir   = $dir/newcerts   　　　　　 #新生成的证书保存目录
+certificate     = $dir/cacert.pem 　　　　　　#CA的证书保存位置
+serial          = $dir/serial　　　　　　　　　#当前证书的序列号
+crlnumber       = $dir/crlnumber 　　　　　　 #当前的吊销序列号
+crl             = $dir/crl.pem　　　　　　　　 #证书吊销列表文件　
+private_key     = $dir/private/cakey.pem    #CA的私钥

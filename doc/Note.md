@@ -830,6 +830,8 @@
 
 - 消息摘要与数字签名
 
+  ![DSA](img/DSA.png)
+
   - 使用非对称加密原始文件效率低
   
   - 解决办法：对文件的消息摘要签名
@@ -848,7 +850,9 @@
   
 - 应用
 
-  - TSL / SSL
+  - TLS/SSL协议
+  
+  - 数字签名
   
   - 电子政务 
     
@@ -923,7 +927,7 @@
     
   - 自签名证书 (Self-Signed Certificate) 
   
-    - 过程
+    - 生成过程 (以OpenSSL为例)
      
       1. 生成私钥
        
@@ -948,24 +952,30 @@
       - OpenSSL
       
       ```sh
-      openssl req -x509 -sha256 -newkey rsa:2048 -keyout certificate.key -out certificate.crt -days 1024 -nodes -subj "/CN=nginxhttps"
+      openssl req \
+          -x509 \
+          -sha256 \
+          -newkey rsa:2048 \
+          -keyout certificate.key \
+          -out certificate.crt \
+          -days 1024 \
+          -nodes -subj "/CN=nginxhttps"
       ```
       
       - Java Keytool
-    
+
       ```sh
-      keytool -genkey -alias tomcat -keyalg RSA -keystore tomcat.keystore
+      keytool -genkey \
+          -alias server \
+          -keyalg RSA \
+          -storepass testtest \
+          -keypass testtest \
+          -dname "CN=localhost" \
+          -keystore server.jks
       ```
-      
-    - 在Nginx中使用
-      
-    - 在SpringBoot中使用
-    
   - 私有CA
     
-    - 密钥格式: 密钥文件的格式, PEM、DER、X509、PKCS这几种格式可以互相转化. PEM 的是将密钥用 base64 编码表示出来的, DER 格式是二进制的密钥文件. X509 是通用的证书文件格式定义. PKCS 的一系列标准是指定的存放密钥的文件标准.
-    
-    - 过程
+    - 生成过程
       
       - 建立CA根证书
       
@@ -987,8 +997,10 @@
         openssl x509 -req -days 365 -in signreq.csr -signkey privkey.pem -out certificate.pem
         ```
       
-      - 签发下级证书
+      - 签发下级证书 (以OpenSSL为例)
       
+        - 编辑OpenSSL配置
+        
         - 生成自己的私钥
         
         - 生成证书请求文件
@@ -996,12 +1008,36 @@
         - 根证书签发下级证书
         
         TODO
+        
+    [OpenSSL创建私有CA](https://www.cnblogs.com/zydev/p/5551581.html)
     
-    - [如何创建私有 CA 并签发证书](https://blog.csdn.net/weixin_34232744/article/details/87536879)
+  - Nginx 安装数字证书
+      
+    - 监听SSL端口
+        
+    - 配置私钥, 证书
+      
+    ```config
+    server {
+      ...
+      listen 443 ssl;
+      ssl_certificate /nginxhttps/nginxhttps.crt;
+      ssl_certificate_key /nginxhttps/nginxhttps.key;
+      ...
+    }
+    ```
+      
+    [数字证书、SSL、HTTPS及在Nginx中的配置](https://www.cnblogs.com/ajianbeyourself/p/3898911.html)
+
+  - SpringBoot 安装数字证书
     
-    - [OpenSSL 给自己颁发根证书，由根证书签发下级证书的步骤](https://www.cnblogs.com/kenshinobiy/p/7441819.html)
+    ```properties
+    server.ssl.key-store=<resource path>
+    server.ssl.key-store-password=<store password>
+    server.ssl.keyStoreType=<format, JKS or PKCS12>
+    ```
     
-  - 证书安装 (以Firefox为例)
+  - 客户端证书安装 (以Firefox为例)
     
     - 打开[选项] -> [隐私和安全] -> [查看证书]菜单 -> 打开[导入证书]
     
@@ -1021,7 +1057,10 @@
   
   - RA (Register Authority): 注册机构 
   
+  - DSS (Digital Signature Standard): 数字证书标准是有美国国家安全局定义的一套数字签名标准. 
+  
   - X.509: 通用的证书格式. 规定了证书可以包含什么信息，并说明了记录信息的方法（数据格式）.
+  
     X.509证书包含版本, 序列号, 签名算法标识符, 签发人姓名, 有效期, 主体名, 主体公钥信息
 
     [X.509](https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-x-509-public-key-certificates)
@@ -1063,13 +1102,10 @@
 
 - 密钥库文件格式
 
-|   格式      | 后缀               |    描述                    |  
+|   格式      | 常用后缀            |    描述                    |  
 |:-----------|:-------------------|:---------------------------|
 |  PEM       | .pem/.key          | PEM格式的密钥, 私钥或公钥    |
 |  DER       | .der/.key          | DER格式的密钥或公钥          |
-|  JKS       | .jks/.ks/.keystore | 私钥和证书                  |
-|  JCEKS     | .jce               | 私钥和证书                  |
-|  PKCS12    | .p12/.pfx          | 私钥和证书                  |
 
 - 证书库文件格式
 
@@ -1078,6 +1114,9 @@
 | X509 (DEM/PEM)     | .cer/.crt          | 证书                       |
 | PKCS10 (DEM/PEM)   | .p10/.csr          | 证书请求                    |
 | PKCS7/CMS (DEM/PEM)| .p7b/.p7r/.spc     | 证书(链)                    |
+| JKS                | .jks/.ks/.keystore | 私钥和证书(建议使用PKCS12)    |
+| JCEKS              | .jce               | 私钥和证书                  |
+| PKCS12             | .p12/.pfx          | 私钥和证书                  |
 
 - 加密文件格式
 
@@ -1175,23 +1214,3 @@
       - 发送修改密文规约 (按规约交换通信主密钥)
     
    [SSL握手协议](https://wiki.mbalib.com/wiki/SSL%E6%8F%A1%E6%89%8B%E5%8D%8F%E8%AE%AE)
-  
-- 应用
-
-  - Nginx 安装OpenSSL生成的数字证书
-  
-    - 监听SSL端口
-    
-    - 配置私钥, 证书
-  
-  ```
-  server {
-    ...
-    listen 443 ssl;
-    ssl_certificate /nginxhttps/nginxhttps.crt;
-    ssl_certificate_key /nginxhttps/nginxhttps.key;
-    ...
-  }
-  ```
-  
-  [数字证书、SSL、HTTPS及在Nginx中的配置](https://www.cnblogs.com/ajianbeyourself/p/3898911.html)
