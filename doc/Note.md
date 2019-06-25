@@ -938,7 +938,7 @@
       2. 生成证书请求
        
         ```sh
-        openssl req -new -key privkey.pem -out signreq.csr -subj "/CN=lzhou"
+        openssl req -new -key privkey.pem -out signreq.csr -subj "/CN=docker.local"
         ```
       
       3. 用步骤1中的私钥签发证书
@@ -973,43 +973,114 @@
           -dname "CN=localhost" \
           -keystore server.jks
       ```
-  - 私有CA
+      
+  - 搭建私有CA及签发证书 (以OpenSSL为例)
     
-    - 生成过程
+    - 根CA搭建
+    
+      - 配置
+            
+      ```config
+      ####################################################################
+      [ ca ]
+      default_ca      = CA_default            # 默认的CA配置；CA_default指向下面配置块
+            
+      ####################################################################
+      [ CA_default ]
+            
+      dir             = /etc/pki/CA           # CA的默认工作目录
+      certs           = $dir/certs            # 认证证书的目录
+      crl_dir         = $dir/crl              # 证书吊销列表的路径
+      database        = $dir/index.txt        # 数据库的索引文件
+            
+            
+      new_certs_dir   = $dir/newcerts         # 新颁发证书的默认路径
+            
+      certificate     = $dir/cacert.pem       # 此服务认证证书，如果此服务器为根CA那么这里为自颁发证书
+      serial          = $dir/serial           # 下一个证书的证书编号
+      crlnumber       = $dir/crlnumber        # 下一个吊销的证书编号
+                                                    
+      crl             = $dir/crl.pem          # The current CRL
+      private_key     = $dir/private/cakey.pem# CA的私钥
+      RANDFILE        = $dir/private/.rand    # 随机数文件
+            
+      x509_extensions = usr_cert              # The extentions to add to the cert
+            
+      name_opt        = ca_default            # 命名方式，以ca_default定义为准
+      cert_opt        = ca_default            # 证书参数，以ca_default定义为准
+            
+            
+      default_days    = 365                   # 证书默认有效期
+      default_crl_days= 30                    # CRl的有效期
+      default_md      = sha256                # 加密算法
+      preserve        = no                    # keep passed DN ordering
+            
+      policy          = policy_anything          #policy_anything策略生效
+            
+      # For the 'anything' policy
+      # At this point in time, you must list all acceptable 'object'
+      # types.
+      [ policy_anything ]                     
+      countryName             = optional
+      stateOrProvinceName     = optional
+      localityName            = optional
+      organizationName        = optional
+      organizationalUnitName  = optional
+      commonName              = supplied
+      emailAddress            = optional
+      ```
+    
+      - 生成证书索引数据库文件
       
-      - 建立CA根证书
+      ```sh
+      touch /etc/pki/CA/index.txt 
+      ```
       
-        - 生成CA私钥
-        
-        ```sh
-        openssl genrsa -aes256 -out privkey.pem 2048
-        ```
-        
-        - 生成证书请求
-        
-        ```sh
-        openssl req -new -key privkey.pem -out signreq.csr -subj "/C=US/ST=NRW/L=Earth/O=CompanyName/OU=IT/CN=www.example.com/emailAddress=email@example.com"
-        ```
-        
-        - 签发证书
-        
-        ```sh
-        openssl x509 -req -days 365 -in signreq.csr -signkey privkey.pem -out certificate.pem
-        ```
+      - 生成序列号文件
       
-      - 签发下级证书 (以OpenSSL为例)
+      ```
+      echo 01 > /etc/pki/CA/serial
+      ```
+      - 生成根CA私钥和自签名证书
       
-        - 编辑OpenSSL配置
-        
-        - 生成自己的私钥
-        
-        - 生成证书请求文件
-        
-        - 根证书签发下级证书
-        
-        TODO
-        
-    [OpenSSL创建私有CA](https://www.cnblogs.com/zydev/p/5551581.html)
+      ```sh
+      openssl req \
+          -x509 \
+          -sha256 \
+          -newkey rsa:2048 \
+          -keyout /etc/pki/CA/private/cakey.pem \
+          -out /etc/pki/CA/cacert.pem \
+          -days 1024 \
+          -nodes -subj "/CN=privateCA"
+      ```
+      
+    - 生成Web服务器证书申请 
+    
+      - 生成密钥
+       
+       ```sh
+       openssl genrsa -aes256 -out /etc/pki/private/docker.local.pem 2048
+       ```
+       
+      - 生成证书申请 
+      
+      ```sh
+      openssl req -new -key /etc/pki/private/docker.local.pem -out /etc/pki/tls/docker.local.csr -subj "/CN=docker.local"
+      ```
+      
+      - 上传证书申请给CA服务器
+      
+    - 根CA签发Web服务器证书
+    
+      - 签发证书
+      
+      ```sh
+      openssl ca -in /etc/pki/tls/docker.local.csr -out /etc/pki/CA/certs/docker.local.crt -days 365
+      ```
+      
+      - 返回证书给Web服务器
+    
+    [私有CA服务器的搭建](https://www.jianshu.com/p/9142d9d186e2)
     
   - Nginx 安装数字证书
       
