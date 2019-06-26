@@ -641,8 +641,6 @@
   
   ![ECB_decr](img/ECB_decr.png)
   
-  ![ECB Disctionary attack](img/ECB_example.png)
-  
   - 优点
   
     - 并行计算
@@ -652,6 +650,8 @@
     - 确定性 (Deterministic)
     
     - 易受字典攻击 (Dictionary Attack)
+    
+      ![ECB Disctionary attack](img/ECB_example.png)
   
   - CBC (Cipher Block Chaining)
   
