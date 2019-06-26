@@ -34,7 +34,7 @@ public class HashIdDemoAjaxController {
         String content;
         String hash;
     }
-    @Value("hashid.salt")
+    @Value("${hashid.salt}")
     private String salt;
     private List<HashIdDemoItem> list = new ArrayList<>();
     public HashIdDemoAjaxController() {

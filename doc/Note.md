@@ -814,11 +814,19 @@
     
 - 定义
 
-  ![Private keyimg/signing](img/Private_key_signing.png)
+  ![Private keyimg/signing](img/DSA.png)
   
   - 使用了公钥加密领域的技术实现，用于鉴别数字信息的方法
   
-  - 注意与加密的区别 ![public_key_encryption](img/public_key_encryption_simple.png)
+  - 注意与加密的区别
+  
+  Digital Signature Algorithm:
+  
+  ![Digital Signature Algorithm](img/Private_key_signing.png) 
+  
+  Public Key Encryption:
+  
+  ![Public Key Encryption](img/public_key_encryption_simple.png)
   
 - 目的
 
@@ -830,23 +838,27 @@
 
 - 消息摘要与数字签名
 
-  ![DSA](img/DSA.png)
-
   - 使用非对称加密原始文件效率低
   
-  - 解决办法：对文件的消息摘要签名
+  - 解决办法：由于`H(M)`与`M`等效, 对文件的消息摘要签名
   
   - 例如: Md5withRSA 先计算MD5消息摘要, 再用RSA对消息摘要签名
   
+- 签名核心算法
+
+  - RSA: 使用RSA加密算法的签名方法
+  
+  - DSA: 由DSS(数字签名标准)定义的基于RSA的签名算法. RSA签名的子集.
+  
+  - ECDSA: 椭圆曲线数字签名算法
+  
 - 常用算法
 
-  - Md5withRSA
+  - Md5withRSA / Md5withDSA
   
-  - SHA1withRSA
+  - SHA1withRSA / SHA1withDSA
   
   - RSA2 / SHA256withRSA [RSA和RSA2签名算法区别 ](https://docs.open.alipay.com/291/106115)
-  
-  - 椭圆曲线数字签名算法（ECDSA）
   
 - 应用
 
@@ -869,9 +881,9 @@
     | 安全性能           | 加密用散列 |    MAC    |  数字签名             |
     |:------------------|:---------:|:---------:|:--------------------:|
     | 完整性             |  Yes      |    Yes    |   Yes                |
-    | 可认证性           |  No       |    Yes    |   Yes                |
-    | 不可否认性         |  No       |    No     |   Yes                |
-    | 密钥类型           | 无        | 对称       | 非对称                |
+    | 可认证性           |  No        |    Yes    |   Yes               |
+    | 不可否认性         |  No        |    No     |   Yes                |
+    | 密钥类型           |  无        | 对称       | 非对称               |
 
   [What are the difference between a digital signature, a MAC and a hash](https://crypto.stackexchange.com/questions/5646/what-are-the-differences-between-a-digital-signature-a-mac-and-a-hash/5647#5647)
   
@@ -957,7 +969,9 @@
           -sha256 \
           -newkey rsa:2048 \
           -keyout certificate.key \
+          -keyform PEM \
           -out certificate.crt \
+          -outform PEM \
           -days 1024 \
           -nodes -subj "/CN=nginxhttps"
       ```
@@ -975,6 +989,10 @@
       ```
       
   - 搭建私有CA及签发证书 (以OpenSSL为例)
+  
+    ![Private CA](img/private_CA.jpg)
+  
+    ![Private CA](img/CA_directory.png)
     
     - 根CA搭建
     
@@ -984,43 +1002,53 @@
       ####################################################################
       [ ca ]
       default_ca      = CA_default            # 默认的CA配置；CA_default指向下面配置块
-            
+      
       ####################################################################
       [ CA_default ]
-            
+      
       dir             = /etc/pki/CA           # CA的默认工作目录
       certs           = $dir/certs            # 认证证书的目录
       crl_dir         = $dir/crl              # 证书吊销列表的路径
       database        = $dir/index.txt        # 数据库的索引文件
-            
-            
+      
+      
       new_certs_dir   = $dir/newcerts         # 新颁发证书的默认路径
-            
+      
       certificate     = $dir/cacert.pem       # 此服务认证证书，如果此服务器为根CA那么这里为自颁发证书
       serial          = $dir/serial           # 下一个证书的证书编号
       crlnumber       = $dir/crlnumber        # 下一个吊销的证书编号
-                                                    
+                                              
       crl             = $dir/crl.pem          # The current CRL
       private_key     = $dir/private/cakey.pem# CA的私钥
       RANDFILE        = $dir/private/.rand    # 随机数文件
-            
+      
       x509_extensions = usr_cert              # The extentions to add to the cert
-            
+      
       name_opt        = ca_default            # 命名方式，以ca_default定义为准
       cert_opt        = ca_default            # 证书参数，以ca_default定义为准
-            
-            
+      
+      
       default_days    = 365                   # 证书默认有效期
       default_crl_days= 30                    # CRl的有效期
       default_md      = sha256                # 加密算法
       preserve        = no                    # keep passed DN ordering
-            
-      policy          = policy_anything          #policy_anything策略生效
-            
+      
+      
+      policy          = policy_match          #policy_match策略生效
+      
+      # For the CA policy
+      [ policy_match ]
+      countryName             = match         #国家；match表示申请者的申请信息必须与此一致
+      stateOrProvinceName     = match         #州、省
+      organizationName        = match         #组织名、公司名
+      organizationalUnitName  = optional      #部门名称；optional表示申请者可以的信息与此可以不一致
+      commonName              = supplied
+      emailAddress            = optional
+      
       # For the 'anything' policy
       # At this point in time, you must list all acceptable 'object'
       # types.
-      [ policy_anything ]                     
+      [ policy_anything ]                     #由于定义了policy_match策略生效，所以此策略暂未生效
       countryName             = optional
       stateOrProvinceName     = optional
       localityName            = optional
@@ -1051,7 +1079,8 @@
           -keyout /etc/pki/CA/private/cakey.pem \
           -out /etc/pki/CA/cacert.pem \
           -days 1024 \
-          -nodes -subj "/CN=privateCA"
+          -nodes \
+          -subj "/C=CN/ST=SC/L=CD/O=chaoxing/OU=dev/CN=privateCA"
       ```
       
     - 生成Web服务器证书申请 
@@ -1059,13 +1088,21 @@
       - 生成密钥
        
        ```sh
-       openssl genrsa -aes256 -out /etc/pki/private/docker.local.pem 2048
+       openssl genrsa \
+           -aes256 \
+           -passout pass:testtest \
+           -out /etc/pki/tls/private/docker.local.pem 2048
        ```
        
       - 生成证书申请 
       
       ```sh
-      openssl req -new -key /etc/pki/private/docker.local.pem -out /etc/pki/tls/docker.local.csr -subj "/CN=docker.local"
+      openssl req \
+          -new \
+          -passin pass:testtest \
+          -key /etc/pki/tls/private/docker.local.pem \
+          -out /etc/pki/tls/certs/docker.local.csr \
+          -subj "/C=CN/ST=SC/L=CD/O=chaoxing/OU=dev/CN=docker.local"
       ```
       
       - 上传证书申请给CA服务器
@@ -1075,7 +1112,11 @@
       - 签发证书
       
       ```sh
-      openssl ca -in /etc/pki/tls/docker.local.csr -out /etc/pki/CA/certs/docker.local.crt -days 365
+      openssl ca \
+          -in /etc/pki/tls/certs/docker.local.csr \
+          -out /etc/pki/CA/certs/docker.local.crt \
+          -batch \
+          -days 365
       ```
       
       - 返回证书给Web服务器
@@ -1136,37 +1177,38 @@
 
     [X.509](https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-x-509-public-key-certificates)
   
-  - PEM (Privacy Enhanced Mail): 规定了加密邮件的封装格式. 包含DEK-Info(数据加密密钥), Key-Info(DEK加密密钥), 加密后的数据和begin信息、end信息等. 以Base64
-  编码存放. 
+  - PEM (Privacy Enhanced Mail): 规定了加密邮件的封装格式, 包含Base64编码的数据和begin信息、end信息. 
   
-  [rfc1421](https://tools.ietf.org/html/rfc1421)
+    [rfc1421](https://tools.ietf.org/html/rfc1421)
+    
+  - DER (Distinguished Encoding Rules): 规定了对任意数据对象的二进制编码格式. 一个数据对象被编码为标识符, 长度, 内容, 结束符. 数据对象可嵌套. 可用PEM进一步封装.
   
-  - DER (Distinguished Encoding Rules): 规定了对任意数据对象的二进制编码格式. 一个数据对象被编码为标识符, 长度, 内容, 结束符. 数据对象可嵌套.
-  
-  [What is DER](http://www.herongyang.com/Cryptography/Certificate-Format-DER-Distinguished-Encoding-Rules.html)
+    [What is DER](http://www.herongyang.com/Cryptography/Certificate-Format-DER-Distinguished-Encoding-Rules.html)
   
   - MIME(Multipurpose Internet Mail Extensions): 定义了在网络中二进制文件的传输协议.
   
   - S/MIME (Secure/MultipurposeInternet Mail Extensions): 定义了有公钥加密和数字签名的MIME数据的传输协议. 加密部分基于PKCS#7/CMS.
      
-  - PKCS (The Public-Key Cryptography Standards): 公钥加密标准 . 
+  - PKCS (The Public-Key Cryptography Standards): 公钥加密标准. 
     由美国RSA数据安全公司及其合作伙伴制定的一组公钥密码学标准，其中包括证书申请、证书更新、证书作废表发布、扩展证书内容以及数字签名、数字信封的格式等方面的一系列相关协议.
     
     [PKCS](https://baike.baidu.com/item/PKCS/1042350?fr=aladdin)
     
-  - PKCS#1：RSA加密标准. 定义了RSA公/私钥的语法
+  - PKCS#1：RSA加密标准. 规定了RSA公/私钥的数据结构
   
   - PKCS#7 / CMS (Cryptographic Message Syntax)：密码消息语法标准. 规定了未加密或签名的格式化消息、已封装（加密）消息、已签名消息和既经过签名又经过加密的消息的语法. 是S/MIME的基础.
   
+  - PKCS#8: 私钥数据结构. 规定了算法标识、私钥数据等数据.
+  
   - PKCS#10：证书请求语法标准. 证书请求包含了一个唯一识别名、公钥和可选的一组属性，它们一起被请求证书的实体签名.
   
-  - PKCS#12：个人信息交换语法标准. 定义了个人身份信息（包括私钥、证书、各种秘密和扩展字段）的格式。
+  - PKCS#12：个人信息交换语法标准. 定义了个人身份信息（包括私钥、证书、各种秘密和扩展字段）的格式.
   
-  - JKS (Java Keystore): 使用keytool生成的keystore文件，存放私钥和证书
+  - JKS (Java Keystore): 使用keytool生成的keystore文件，存放私钥和证书. 
   
   - JCEKS (Java Cryptography Extension KeyStore): 由JCE(Java Cryptography Extension)提供. 对其中的密钥使用3DES加密, 相比JKS更安全.
   
-  [PKCS 发布的15 个标准](https://blog.csdn.net/book_xnlzh035/article/details/84179373)
+    [PKCS 发布的15 个标准](https://blog.csdn.net/book_xnlzh035/article/details/84179373)
   
     
 ## 常见密钥/证书储存格式 (Keystore / Certificate Format)
@@ -1185,7 +1227,7 @@
 | X509 (DEM/PEM)     | .cer/.crt          | 证书                       |
 | PKCS10 (DEM/PEM)   | .p10/.csr          | 证书请求                    |
 | PKCS7/CMS (DEM/PEM)| .p7b/.p7r/.spc     | 证书(链)                    |
-| JKS                | .jks/.ks/.keystore | 私钥和证书(建议使用PKCS12)    |
+| JKS                | .jks/.ks/.keystore | 私钥和证书(建议使用PKCS12)   |
 | JCEKS              | .jce               | 私钥和证书                  |
 | PKCS12             | .p12/.pfx          | 私钥和证书                  |
 
@@ -1240,7 +1282,7 @@
   
     - 安全地终止链接
   
-  [告警协议](https://wiki.mbalib.com/wiki/SSL%E8%AD%A6%E5%91%8A%E5%8D%8F%E8%AE%AE)
+    [告警协议](https://wiki.mbalib.com/wiki/SSL%E8%AD%A6%E5%91%8A%E5%8D%8F%E8%AE%AE)
   
   - TLS/SSL 握手协议: 规定了握手过程, 基于TLS/SSL 记录协议.
     
