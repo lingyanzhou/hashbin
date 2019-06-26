@@ -102,7 +102,7 @@
   
   - 初始化状态向量, 把消息分组后, 级联非线性方程, 根据最终的状态向量输出
   
-  - [常见的Hash算法(General Purpose Hash Function Algorithms)](https://blog.csdn.net/wwchao2012/article/details/80316862)
+  [常见的Hash算法(General Purpose Hash Function Algorithms)](https://blog.csdn.net/wwchao2012/article/details/80316862)
 
 - 代表算法
   
@@ -116,20 +116,20 @@
    
     - 随机性差
    
-    - [通信原理中CRC校验原理与过程](https://baijiahao.baidu.com/s?id=1608965002019598869&wfr=spider&for=pc)
+    [通信原理中CRC校验原理与过程](https://baijiahao.baidu.com/s?id=1608965002019598869&wfr=spider&for=pc)
   - SDBM
    
     - 通用散列算法, 分桶性能好
     
     - hash(i) = hash(i - 1)65599 + str[i]
     
-    - [哈希(Hash)算法 DJB/ELF/PJW/SDBM/FNV1(a)](https://blog.csdn.net/wwchao2012/article/details/80329766)
+    [哈希(Hash)算法 DJB/ELF/PJW/SDBM/FNV1(a)](https://blog.csdn.net/wwchao2012/article/details/80329766)
   
   - BKDR
     
     - 通用散列算法, 可通过改变seed生成一组散列函数
     
-    - [BKDRhash ](https://www.cnblogs.com/ldy-miss/p/6099454.html)
+    [BKDRhash ](https://www.cnblogs.com/ldy-miss/p/6099454.html)
   
   - MD5 (Message Digest 5)
   
@@ -141,7 +141,7 @@
     
     - 王小云于2004年破解
     
-    - [信息摘要算法之一：MD5算法解析及实现 ](https://www.cnblogs.com/foxclever/p/7668369.html)
+    [信息摘要算法之一：MD5算法解析及实现 ](https://www.cnblogs.com/foxclever/p/7668369.html)
   
   - SHA1 (Secure Hash Algorithm 1)
   
@@ -153,7 +153,7 @@
     
     - 王小云于2005年破解
     
-    - [信息摘要算法之二：SHA1算法分析及实现](https://www.cnblogs.com/foxclever/p/8282366.html)
+    [信息摘要算法之二：SHA1算法分析及实现](https://www.cnblogs.com/foxclever/p/8282366.html)
  
   - SHA256
    
@@ -161,7 +161,7 @@
     
     - 摘要长度: 256位散列值
     
-    - [比特币算法——SHA256算法介绍](https://blog.csdn.net/wowotuo/article/details/78907380)
+    [比特币算法——SHA256算法介绍](https://blog.csdn.net/wowotuo/article/details/78907380)
 
 - 应用
 
@@ -187,7 +187,7 @@
     
     - 工作量证明方程: 满足难度目标(前置零的个数)的散列值`H(message, nounce)`
     
-    - [区块链共识技术一:pow共识机制](https://www.jianshu.com/p/1026fb3c566f)
+    [区块链共识技术一:pow共识机制](https://www.jianshu.com/p/1026fb3c566f)
   
   - 布伦过滤器 (Bloom Filter)
   
@@ -199,7 +199,7 @@
     
     - 牺牲正确性, 以获得常数的时间和空间复杂度
     
-    - [布隆过滤器 -- 空间效率很高的数据结构](https://segmentfault.com/a/1190000002729689)
+    [布隆过滤器 -- 空间效率很高的数据结构](https://segmentfault.com/a/1190000002729689)
   
   - 一致性哈希 (Consistent Hashing)
     
@@ -213,7 +213,7 @@
     
     - 一致性哈希要求键值和节点ID处于同一值域(哈希环), 而不用取模操作. 内容将被存储到具有与其键值最接近的ID的节点上
     
-    - [深入浅出一致性Hash原理](https://www.jianshu.com/p/e968c081f563)
+    [深入浅出一致性Hash原理](https://www.jianshu.com/p/e968c081f563)
  
   - 散列链一次性口令
     
@@ -227,7 +227,7 @@
       
       - 如果验证成功, 服务器更新口令为`h^999(password)`
     
-    - [哈希链](https://baike.baidu.com/item/%E5%93%88%E5%B8%8C%E9%93%BE/10230309)
+    [哈希链](https://baike.baidu.com/item/%E5%93%88%E5%B8%8C%E9%93%BE/10230309)
     
 - 常见攻击
   
@@ -237,7 +237,7 @@
   
   - 生日攻击
     
-    - [抗碰撞性、生日攻击及安全散列函数结构解析](https://blog.csdn.net/jerry81333/article/details/52763070/)
+    [抗碰撞性、生日攻击及安全散列函数结构解析](https://blog.csdn.net/jerry81333/article/details/52763070/)
   
   - 长度扩展攻击
     
@@ -249,7 +249,7 @@
     
     - 对抗: HMAC
     
-    - [MD5的Hash长度扩展攻击](https://www.cnblogs.com/p00mj/p/6288337.html)
+    [MD5的Hash长度扩展攻击](https://www.cnblogs.com/p00mj/p/6288337.html)
 
 ## HMAC
 
@@ -259,17 +259,17 @@
   
   - `HMAC（K，M）=H（K⊕opad∣H（K⊕ipad∣M）`
   
+  [rfc2104](https://tools.ietf.org/html/rfc2104)
+  
+- 算法结构
+  
   - ![HMAC simplified](img/hmac_simple.jpg)
   
   - ![HMAC detailed](img/hmac_detail.png)
   
-  - [rfc2104](https://tools.ietf.org/html/rfc2104)
+  [HMAC的图解](https://blog.csdn.net/chengqiuming/article/details/82822933)
   
-- 算法结构
-  
-  - [HMAC的图解](https://blog.csdn.net/chengqiuming/article/details/82822933)
-  
-  - [知乎: HMAC与MAC算法在密码学的区别？](https://www.zhihu.com/question/26605600/answer/33382509)
+  [知乎: HMAC与MAC算法在密码学的区别？](https://www.zhihu.com/question/26605600/answer/33382509)
 
 - 目的
 
@@ -287,7 +287,7 @@
   
   - “质疑/应答”(Challenge/Response)
     
-    - ![HMAC authentication](img/hmac_authentication.png)
+    ![HMAC authentication](img/hmac_authentication.png)
     
     - 注册时, 分发给用户API Key (key)
     
@@ -333,7 +333,7 @@
     
     - 雪崩效应 (Avalanche effect): 一个输入位改变会导致整个密文改变
     
-  - [Lecture 39:  Properties of Ciphers](https://www.cs.utexas.edu/~byoung/cs361/lecture39.pdf)  
+  [Lecture 39:  Properties of Ciphers](https://www.cs.utexas.edu/~byoung/cs361/lecture39.pdf)  
 
 - 按方式分类
 
@@ -389,7 +389,7 @@
       
       - 可伸缩性(malleability)高
       
-  - [Lecture 45: Stream and Block Encryption](https://www.cs.utexas.edu/~byoung/cs361/lecture45.pdf)
+  [Lecture 45: Stream and Block Encryption](https://www.cs.utexas.edu/~byoung/cs361/lecture45.pdf)
 
 - 按密钥分类
 
@@ -459,7 +459,7 @@
  
 - 密钥分发
 
-  ![对称加密密钥分发](img/sym-encry.png)
+  - 通过非对称加密分发
   
   - 例如: 通过非对称加密算法
   
@@ -505,9 +505,9 @@
   
   - 时间分析 (Timing Analysis)
   
-  - [Attacks on Symmetric Key](https://www.cs.clemson.edu/course/cpsc424/material/Cryptography/Attacks%20on%20Symmetric%20Key.pdf)
+  [Attacks on Symmetric Key](https://www.cs.clemson.edu/course/cpsc424/material/Cryptography/Attacks%20on%20Symmetric%20Key.pdf)
   
-  - [Week9 - part 2 - Symmetric Key Encryption.pdf](https://www.ics.uci.edu/~stasio/ics8-w12/Week9%20-%20part%202%20-%20Symmetric%20Key%20Encryption.pdf)
+  [Week9 - part 2 - Symmetric Key Encryption.pdf](https://www.ics.uci.edu/~stasio/ics8-w12/Week9%20-%20part%202%20-%20Symmetric%20Key%20Encryption.pdf)
 
 - 代表算法
 
@@ -623,7 +623,7 @@
           
           与循环密钥XOR
           
-    - [Lecture 46: Advanced Encryption Standard](https://www.cs.utexas.edu/~byoung/cs361/lecture46.pdf)
+    [Lecture 46: Advanced Encryption Standard](https://www.cs.utexas.edu/~byoung/cs361/lecture46.pdf)
   
   - 其他算法:
   
@@ -714,12 +714,14 @@
     - 并行计算
     - 错误隔离
     
-  - [加密技术简介](https://blog.csdn.net/weixin_28774815/article/details/81359015)
+  [加密技术简介](https://blog.csdn.net/weixin_28774815/article/details/81359015)
   
 ## 非对等 / 公钥加密 (Asymmetric / Public Key Encryption)
 
 - 定义 
+
   ![Asymmetric Encryption](img/Asymmetric-Encryption.png)
+  
   - 由对应的一对唯一性密钥（即公开密钥和私有密钥）组成的加密方法
   
 - 特点
@@ -757,7 +759,7 @@
     - 数论基础
     
       - 欧拉函数(φ(1)): 对正整数n，欧拉函数是小于n的正整数中与n互质的数的数目(φ(1)=1) 
-        - [欧拉函数](https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1944850?fr=aladdin)
+        [欧拉函数](https://baike.baidu.com/item/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1944850?fr=aladdin)
       
       - 欧拉函数性质
         - 当`n=pq`, `p`和`q`为质数时, `φ(n) = (p-1)(q-1)`
@@ -765,13 +767,13 @@
         
       - 欧拉定理: `a^φ(n) ≡ 1 (mod n)`.
       
-        - [费马小定理、欧拉定理与扩展欧拉定理](https://blog.csdn.net/hzj1054689699/article/details/80693756)
+        [费马小定理、欧拉定理与扩展欧拉定理](https://blog.csdn.net/hzj1054689699/article/details/80693756)
       
       - 扩展欧几里德算法
         
         - 已知`a`, `b`求解一组`x`，`y`使得`ax+by = Gcd(a, b) =d`
         
-        - [扩展欧几里德算法](https://baike.baidu.com/item/%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E7%AE%97%E6%B3%95/1053275?fr=aladdin)
+        [扩展欧几里德算法](https://baike.baidu.com/item/%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E7%AE%97%E6%B3%95/1053275?fr=aladdin)
     - 思想
     
       - 对任意整数k, `M^(k*φ(n)) ≡ 1 (mod n)` [欧拉定理]
@@ -868,7 +870,7 @@
   
   - 电子政务 
     
-    - [让群众少跑腿，政府工作报告说要这么干 ](http://www.sohu.com/a/302489296_100143761)
+    [让群众少跑腿，政府工作报告说要这么干 ](http://www.sohu.com/a/302489296_100143761)
     
   - 公钥认证 (Public Key Authentication)
   
@@ -1186,7 +1188,7 @@
     
     - 打开[选项] -> [隐私和安全] -> [查看证书]菜单 -> 打开[导入证书]
     
-    - [证书安装](img/firefox_install_cert.PNG)
+    [证书安装](img/firefox_install_cert.PNG)
     
 - 术语表
 
