@@ -1,5 +1,6 @@
 package lzhou.learning.hash.hashbin.controller;
 
+import com.google.common.io.BaseEncoding;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,28 +92,28 @@ public class DigitalSignatureAjaxController {
      * @throws Exception
      */
     @PostMapping(value="sign")
-    public byte[] sign(@RequestBody byte[] data) throws Exception {
+    public String sign(@RequestBody byte[] data) throws Exception {
         Signature signature = Signature.getInstance(SIGN_ALGO);
         signature.initSign(privKey);
         signature.update(data);
         byte[] signed = signature.sign();
 
-        return signed;
+        return BaseEncoding.base64Url().encode(signed);
     }
 
     /**
      * 将内容体、签名信息、及对方公钥进行验签
      * @param data 内容体
-     * @param sign 签名信息
+     * @param signBase64Url 签名信息
      * @return boolean
      * @throws Exception
      */
-    @PostMapping(value="sign", consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
-    public boolean verify(@RequestParam byte[] data, @RequestParam byte[] sign) throws Exception {
+    @PostMapping(value="verify/{signBase64Url}")
+    public boolean verify(@RequestBody byte[] data, @PathVariable String signBase64Url) throws Exception {
         Signature signature = Signature.getInstance(SIGN_ALGO);
         signature.initVerify(pubKey);
         signature.update(data);
 
-        return signature.verify(sign);
+        return signature.verify(BaseEncoding.base64Url().decode(signBase64Url));
     }
 }
