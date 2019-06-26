@@ -869,6 +869,39 @@
   - 电子政务 
     
     - [让群众少跑腿，政府工作报告说要这么干 ](http://www.sohu.com/a/302489296_100143761)
+    
+  - 公钥认证 (Public Key Authentication)
+  
+    - 原理
+    
+      - 客户端持有私钥, 服务器端持有公钥
+    
+      - 当服务器验证客户端时, 服务器发送随机问题(challenge), 并发送给客户端
+      
+      - 客户端用私钥对问题进行签名, 并传回答案(answer)
+      
+      - 服务器验证答案
+    
+    - SSH公钥认证配置
+    
+      - SSH服务器配置
+      
+      ```configuration
+      RSAAuthentication yes           #启用 RSA 认证，默认为yes
+      PubkeyAuthentication yes      #启用公钥认证，默认为yes
+      AuthorizedKeysFile     .ssh/authorized_keys  
+      ```
+    
+      - SSH客服端生成密钥对
+      
+      ```sh
+      ssh-keygen -t rsa
+      mv id_rsa ~/.ssh
+      ```
+      
+      默认生成私钥id_rsa和公钥id_rsa.pub
+      
+      - 上传公钥(id_rsa.pub)至SSH服务器
 
 - 散列, HMAC与数字签名的对比
     
